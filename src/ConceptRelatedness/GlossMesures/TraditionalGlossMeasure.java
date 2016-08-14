@@ -5,19 +5,19 @@
  */
 package ConceptRelatedness.GlossMesures;
 
-import ConceptRelatedness.GlossMesures.GlossAlgorithm;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
-import ConceptRelatedness.Concept.Concept;
+import ConceptRelatedness.Concept.TraditionalRelatedConceptsGenerator;
 
 /**
  *
  * @author sobhy
  */
-public class TraditionalGlossMeasure extends GlossAlgorithm {
+public class TraditionalGlossMeasure  extends GlossAlgorithm<TraditionalRelatedConceptsGenerator> {
 
     public TraditionalGlossMeasure(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
         super(concept1, concept2, resource);
+        this.setRelatedConceptsGenerator(new TraditionalRelatedConceptsGenerator());
     }
     
 }

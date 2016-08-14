@@ -6,6 +6,7 @@
 package ConceptRelatedness.Concept;
 
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
+import ConceptRelatedness.GlossMesures.GlossAlgorithm;
 import java.util.ArrayList;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 
@@ -97,8 +98,8 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
      * @return
      */
     public abstract boolean equals(Concept concept);
-        public ArrayList<String> getWordBag(ConceptsRelatednessAlgorithm algorithm) {
-        RelatedConceptsGenerator generator = RelatedConceptsGeneratorFactory.produceObject(algorithm);
+        public ArrayList<String> getWordBag(GlossAlgorithm algorithm) {
+        RelatedConceptsGenerator generator = algorithm.getRelatedConceptsGenerator();
         this.RelatedConcepts = generator.generate(this);
         ArrayList<String> result = new ArrayList<>();
         for (Concept concept : RelatedConcepts) {

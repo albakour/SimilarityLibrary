@@ -7,7 +7,6 @@ package WordSenseDisambiguation;
 
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
-import ConceptRelatedness.ConceptsRelatednessAlgorithmFactory;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 import java.util.ArrayList;
 
@@ -15,16 +14,16 @@ import java.util.ArrayList;
  *
  * @author sobhy
  */
-public abstract class MaximizeRelatednessWSDAlgorithm extends WordSenseDisambiguationAlgorithm {
+public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatednessAlgorithm> extends WordSenseDisambiguationAlgorithm {
 
-    ConceptsRelatednessAlgorithm relatednessMeasure;
+    T relatednessMeasure;
     int firstWindowIndex;
     int lastWindowIndex;
     int targetWordIndex;
 
     public MaximizeRelatednessWSDAlgorithm(Word[] sentenceWords, Word target, SemanticResourceHandler resource) {
         super(sentenceWords, target, resource);
-        this.relatednessMeasure = ConceptsRelatednessAlgorithmFactory.produceObject(this);
+        //this.relatednessMeasure = ConceptsRelatednessAlgorithmFactory.produceObject(this);
         
     }
 
@@ -110,6 +109,9 @@ public abstract class MaximizeRelatednessWSDAlgorithm extends WordSenseDisambigu
         }
         targetWordIndex=-1;
         
+    }
+    public void setRelatednessMeasure(T algorithm){
+        this.relatednessMeasure=algorithm;
     }
 
 

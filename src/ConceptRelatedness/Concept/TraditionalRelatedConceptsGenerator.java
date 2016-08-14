@@ -5,7 +5,6 @@
  */
 package ConceptRelatedness.Concept;
 
-import ConceptRelatedness.Concept.Concept;
 import java.util.ArrayList;
 
 /**

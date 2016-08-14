@@ -5,18 +5,21 @@
  */
 package WordSenseDisambiguation;
 
-import WordSenseDisambiguation.MaximizeRelatednessWSDAlgorithm;
+
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
-import WordSenseDisambiguation.Word;
+import ConceptRelatedness.GlossMesures.TraditionalGlossMeasure;
+
 
 /**
  *
  * @author sobhy
  */
-public class OrginalLeskAlgorithm extends MaximizeRelatednessWSDAlgorithm {
+public class OrginalLeskAlgorithm  extends MaximizeRelatednessWSDAlgorithm <TraditionalGlossMeasure> {
 
     public OrginalLeskAlgorithm(Word[] sentenceWords, Word target,SemanticResourceHandler resource) {
         super(sentenceWords, target,resource);
+        this.setRelatednessMeasure(new TraditionalGlossMeasure(null,null,resource));
     }
+
     
 }

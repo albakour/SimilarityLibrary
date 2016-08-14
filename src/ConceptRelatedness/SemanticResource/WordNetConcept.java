@@ -88,14 +88,12 @@ public class WordNetConcept extends Concept<Synset,WordNetHandler> {
     @Override
     public int getDepth() {
         // the root of the taxonomy
-        Concept entity;
-        entity = this.getSemanticResource().getWrappingConcepts("entity")[0];
         
         // we need to cast semanticResource here becaue findPathToSuccessor 
         // is a in just WordNetHandler and not overriden 
         // because it is not neccessary that the ontology which represent the semantic resource
         // to have taxonomy form , so it is not included in semantic resource interface
-        List<Concept> list = semanticResource.findPathToSuccessor(entity, this);
+        List<Concept> list = semanticResource.findPathToSuccessor(semanticResource.getRoot(), this);
         return list.size();
     }
 

@@ -6,8 +6,7 @@
 package ConceptRelatedness.GlossMesures;
 
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
-import ConceptRelatedness.Concept.Concept;
-import ConceptRelatedness.Concept.Concept;
+import ConceptRelatedness.Concept.*;
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import java.util.ArrayList;
 import Helper.Helper;
@@ -15,11 +14,13 @@ import Helper.Helper;
 /**
  *
  * @author sobhy
+ * @param <T>
  */
-public abstract class GlossAlgorithm extends ConceptsRelatednessAlgorithm {
+public abstract class GlossAlgorithm<T extends RelatedConceptsGenerator> extends ConceptsRelatednessAlgorithm {
 
     protected ArrayList<String> wordsBag1;
     protected ArrayList<String> wordsBag2;
+    protected T relatedConceptsGenerator;
 
 
     public GlossAlgorithm(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
@@ -62,6 +63,12 @@ public abstract class GlossAlgorithm extends ConceptsRelatednessAlgorithm {
         }
         return result;
 
+    }
+    public void setRelatedConceptsGenerator(T generator){
+        this.relatedConceptsGenerator=generator;
+    }
+    public T getRelatedConceptsGenerator(){
+        return this.relatedConceptsGenerator;
     }
 
 

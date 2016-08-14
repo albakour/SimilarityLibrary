@@ -15,6 +15,7 @@ public abstract class  SemanticResourceHandler {
      */
     // static because the implementing class should be singleton
     protected static FindLCSAlgorithm lcsGetter;
+    protected  static Concept root;
     public abstract void init();
     public  abstract Concept[]getWrappingConcepts(String word);
 
@@ -65,6 +66,9 @@ public abstract class  SemanticResourceHandler {
      */
     public Concept getLcs(Concept concept1, Concept concept2){
         return lcsGetter.getLcs(concept1, concept2);
+    }
+    public Concept getRoot(){
+        return this.root;
     }
 
 }

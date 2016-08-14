@@ -15,7 +15,7 @@ import java.util.Queue;
  *
  * @author sobhy
  */
-public class BottomUpFindLcsAlgorithm extends FindLCSAlgorithm {
+public class BottomUpFindLcsAlgorithm implements  FindLCSAlgorithm {
 
     /**
      *

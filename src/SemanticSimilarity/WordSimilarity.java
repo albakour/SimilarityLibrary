@@ -58,8 +58,8 @@ public class WordSimilarity {
 //        sentenceDisambiguator.execute(windowSize);
 //        sentenceDisambiguator.printDisambiguatedWords();
 
-        wordForm1 = "mail";
-        wordForm2 = "tiger";
+        wordForm1 = "boy";
+        wordForm2 = "girl";
         Word[] words = new Word[2];
         Word word1 = new Word(wordForm1);
         Word word2 = new Word(wordForm2);

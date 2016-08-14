@@ -5,6 +5,7 @@
  */
 package WordSenseDisambiguation;
 
+import ConceptRelatedness.GlossMesures.ExtendedGlossMasure;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 
 
@@ -12,10 +13,12 @@ import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
  *
  * @author sobhy
  */
-public class ExtendedLeskAlgorithm extends MaximizeRelatednessWSDAlgorithm{
+public class ExtendedLeskAlgorithm extends MaximizeRelatednessWSDAlgorithm<ExtendedGlossMasure>{
 
     public ExtendedLeskAlgorithm(Word[] sentenceWords, Word target,SemanticResourceHandler resource) {
         super(sentenceWords, target,resource);
+        this.setRelatednessMeasure(new ExtendedGlossMasure(null, null, resource));
+      
     }
     
 }

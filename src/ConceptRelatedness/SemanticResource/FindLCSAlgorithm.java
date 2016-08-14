@@ -11,7 +11,13 @@ import ConceptRelatedness.Concept.Concept;
  *
  * @author sobhy
  */
-public  abstract class FindLCSAlgorithm {
+public  interface FindLCSAlgorithm {
     
-   public abstract Concept getLcs(Concept concept1,Concept concept2); 
+    /**
+     *
+     * @param concept1
+     * @param concept2
+     * @return
+     */
+    public Concept getLcs(Concept concept1,Concept concept2); 
 }
