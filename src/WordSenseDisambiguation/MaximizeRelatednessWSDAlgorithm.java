@@ -13,6 +13,7 @@ import java.util.ArrayList;
 /**
  *
  * @author sobhy
+ * @param <T>
  */
 public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatednessAlgorithm> extends WordSenseDisambiguationAlgorithm {
 

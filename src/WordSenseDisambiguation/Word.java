@@ -7,6 +7,7 @@ package WordSenseDisambiguation;
 
 import ConceptRelatedness.SemanticResource.WordNetHandler;
 import ConceptRelatedness.Concept.Concept;
+import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 import java.util.ArrayList;
 
 /**
@@ -21,10 +22,14 @@ public class Word {
     // applying Disambiuation Algorithm
     private Concept[] disambiguatedSenses;
     public boolean isDisambiguated;
+    public boolean isNoun;
+    private boolean areSensesGenerated;
+    SemanticResourceHandler semanticResource;
 
-    public Word(String value) {
+    public Word(String value, SemanticResourceHandler resource) {
         this.value = value;
-        generatePossibleSenses();
+        this.semanticResource = resource;
+        
     }
 
     public Concept[] getDisamiguatedSenses() {
@@ -38,20 +43,35 @@ public class Word {
         int len = disSenses.size();
         Concept[] senses = new Concept[len];
         for (int i = 0; i < len; i++) {
-            senses[i]=disSenses.get(i);
+            senses[i] = disSenses.get(i);
         }
         disambiguatedSenses = senses;
         isDisambiguated = true;
     }
 
     public void generatePossibleSenses() {
-        WordNetHandler resource = WordNetHandler.getInstance();
-        possibleSenses = resource.getWrappingConcepts(value);
+        possibleSenses = semanticResource.getWrappingConcepts(this);
+        if(this.isNoun){
+            for(int i=0;i<possibleSenses.length;i++){
+                possibleSenses[i].inTaxonomy=true;
+            }
+        }
 
     }
 
     public Concept[] getPossibleSenses() {
+        if (!areSensesGenerated) {
+            generatePossibleSenses();
+            areSensesGenerated=true;
+        }
         return possibleSenses;
+    }
+
+    public boolean equals(Word word) {
+        if (word.value.equals(this.value)) {
+            return true;
+        }
+        return false;
     }
 
 }

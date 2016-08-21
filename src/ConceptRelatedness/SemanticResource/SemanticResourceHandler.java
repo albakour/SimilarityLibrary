@@ -6,6 +6,7 @@
 package ConceptRelatedness.SemanticResource;
 
 import ConceptRelatedness.Concept.Concept;
+import WordSenseDisambiguation.Word;
 import java.util.ArrayList;
 
 
@@ -17,7 +18,7 @@ public abstract class  SemanticResourceHandler {
     protected static FindLCSAlgorithm lcsGetter;
     protected  static Concept root;
     public abstract void init();
-    public  abstract Concept[]getWrappingConcepts(String word);
+    public  abstract Concept[]getWrappingConcepts(Word word);
 
     /**
      * returns the number of all concepts in the taxonomy

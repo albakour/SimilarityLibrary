@@ -18,7 +18,8 @@ public class OrginalLeskAlgorithm  extends MaximizeRelatednessWSDAlgorithm <Trad
 
     public OrginalLeskAlgorithm(Word[] sentenceWords, Word target,SemanticResourceHandler resource) {
         super(sentenceWords, target,resource);
-        this.setRelatednessMeasure(new TraditionalGlossMeasure(null,null,resource));
+        TraditionalGlossMeasure measure=new TraditionalGlossMeasure(null,null,resource);
+        this.setRelatednessMeasure(measure);
     }
 
     

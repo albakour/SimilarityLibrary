@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package ConceptRelatedness.ConceptSimilarity;
+
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.*;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
@@ -12,21 +13,38 @@ import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
  *
  * @author sobhy
  */
-public abstract class SimilarityAlgorithm extends ConceptsRelatednessAlgorithm  {
+public abstract class SimilarityAlgorithm extends ConceptsRelatednessAlgorithm {
+
     // Lowest Common Subsummer
+
     protected Concept lcs;
 
-
-    public SimilarityAlgorithm(Concept concept1, Concept concept2,SemanticResourceHandler semanticResource) {
-        super(concept1,concept2,semanticResource);
+    public SimilarityAlgorithm(Concept concept1, Concept concept2, SemanticResourceHandler semanticResource) {
+        super(concept1, concept2, semanticResource);
     }
 
+    /**
+     *
+     */
     @Override
     public abstract void execute();
 
     @Override
     protected abstract double calculateRelatedness();
-    
+
+    protected void defaultExecution() {
+        ConceptsRelatednessAlgorithm defaultMeasure = DefaultConceptRelatednessMeasureFactory.getCurrentObject();
+        defaultMeasure.setFirstConcept(firstConcept);
+        defaultMeasure.setFirstConcept(secondConcept);
+        defaultMeasure.execute();
+        this.relatedness = defaultMeasure.getRelatedness();
+        this.normalizedRelatedness = defaultMeasure.getNormalizedRelatedness();
+        this.explanation = "\nDefault Measure Result\n" + defaultMeasure.getExplanation();
+        this.formula = "\n Default Measure Formula\n" + defaultMeasure.getFormula();
+        this.maximum = defaultMeasure.getMaximum();
+        this.minimum = defaultMeasure.getMinimum();
+
+    }
 
 //    protected Synset findLcs() {
 //
@@ -117,5 +135,4 @@ public abstract class SimilarityAlgorithm extends ConceptsRelatednessAlgorithm  
 //        return null;
 //
 //    }
-
 }

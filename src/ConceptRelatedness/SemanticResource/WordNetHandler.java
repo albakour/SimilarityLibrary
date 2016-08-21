@@ -7,6 +7,7 @@ package ConceptRelatedness.SemanticResource;
 
 import Helper.ConceptNode;
 import ConceptRelatedness.Concept.Concept;
+import WordSenseDisambiguation.Word;
 import edu.smu.tspell.wordnet.*;
 
 import java.util.ArrayList;
@@ -74,16 +75,40 @@ public class WordNetHandler extends SemanticResourceHandler {
 
     /**
      *
-     * @param wordForm
+     * @param word
      * @return
      */
     @Override
-    public Concept[] getWrappingConcepts(String wordForm) {
-        Synset[] synsets = database.getSynsets(wordForm, SynsetType.NOUN, true);
-        int len = synsets.length;
-        WordNetConcept[] result = new WordNetConcept[len];
-        for (int i = 0; i < len; i++) {
-            result[i] = new WordNetConcept(synsets[i]);
+    public Concept[] getWrappingConcepts(Word word) {
+        Synset[] synsets;
+        ArrayList<WordNetConcept> resultList = new ArrayList<>();
+        if (word.isNoun) {
+            synsets = database.getSynsets(word.value, SynsetType.NOUN, true);
+
+            for (int i = 0; i < synsets.length; i++) {
+                resultList.add(new WordNetConcept(synsets[i]));
+            }
+        }else {
+            synsets = database.getSynsets(word.value, SynsetType.VERB, true);
+            for (int i = 0; i < synsets.length; i++) {
+                resultList.add(new WordNetConcept(synsets[i]));
+            }
+            synsets = database.getSynsets(word.value, SynsetType.ADJECTIVE, true);
+            for (int i = 0; i < synsets.length; i++) {
+                resultList.add(new WordNetConcept(synsets[i]));
+            }
+            synsets = database.getSynsets(word.value, SynsetType.ADJECTIVE_SATELLITE, true);
+            for (int i = 0; i < synsets.length; i++) {
+                resultList.add(new WordNetConcept(synsets[i]));
+            }
+            synsets = database.getSynsets(word.value, SynsetType.ADVERB, true);
+            for (int i = 0; i < synsets.length; i++) {
+                resultList.add(new WordNetConcept(synsets[i]));
+            }
+        }
+        WordNetConcept[] result = new WordNetConcept[resultList.size()];
+        for (int i = 0; i < resultList.size(); i++) {
+            result[i] = resultList.get(i);
         }
         return result;
     }

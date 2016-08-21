@@ -5,7 +5,6 @@
  */
 package ConceptRelatedness.Concept;
 
-import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import ConceptRelatedness.GlossMesures.GlossAlgorithm;
 import java.util.ArrayList;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
@@ -25,6 +24,7 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
      */
     protected V value;
     protected S semanticResource;
+    public boolean inTaxonomy;
     ArrayList<Concept> RelatedConcepts;
 
     public Concept(V value) {
@@ -37,6 +37,7 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
      * make sure that any class implements this class should implement this
      * function not inherit it form Object class
      *
+     * @return 
      */
     public abstract String representAsString();
 

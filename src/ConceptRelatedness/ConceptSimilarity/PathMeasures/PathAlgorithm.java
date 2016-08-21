@@ -5,10 +5,11 @@
  */
 package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 
-
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
+import ConceptRelatedness.*;
 import ConceptRelatedness.ConceptSimilarity.SimilarityAlgorithm;
+import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import java.util.ArrayList;
 
 /**
@@ -21,13 +22,17 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
     protected ArrayList<Concept> path;
     protected WeightFunction weighter;
 
-    public PathAlgorithm(Concept concept1, Concept concept2,SemanticResourceHandler resource) {
-        super(concept1, concept2,resource);
+    public PathAlgorithm(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
+        super(concept1, concept2, resource);
     }
 
     @Override
     public void execute() {
-        lcs=semanticResource.getLcs(firstConcept, secondConcept);
+        if (!this.firstConcept.inTaxonomy || !this.secondConcept.inTaxonomy) {
+            defaultExecution();
+            return;
+        }
+        lcs = semanticResource.getLcs(firstConcept, secondConcept);
         // findLcs() should be called before findShortestPath() bcause the secod uses the first
 
         //
@@ -37,7 +42,7 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
         pathLength = calculatePathLength();
 
         relatedness = calculateRelatedness();
-        normalizedRelatedness=normalizeRelatedness();
+        normalizedRelatedness = normalizeRelatedness();
 
         // dealing with the explanation
         explanation += "Lowest Common Subsummer : \n";
@@ -52,8 +57,8 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
             count++;
         }
         explanation += "\nShortest Path Length : " + pathLength;
-        explanation +="\nweight function formula: "+weighter.getFormula();
-        explanation+= "\nFormula : "+ formula;
+        explanation += "\nweight function formula: " + weighter.getFormula();
+        explanation += "\nFormula : " + formula;
     }
 
     @Override
@@ -92,7 +97,6 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
 //        return result;
 //
 //    }
-
 //    protected int depth(Synset concept) {
 //        NounSynset entity;
 //        entity = (NounSynset) WordNetHandler.getWrappingConcepts("entity")[0];
@@ -107,9 +111,7 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
         }
 
         // to weight the edges
-        
       //  weighter = WeightFunctionFactory.produceObject(this);sd;
-
         // for variables
         Concept parent, child;
         int len = path.size();
