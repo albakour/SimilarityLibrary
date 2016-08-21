@@ -40,8 +40,9 @@ public class WordSimilarity {
         String sentence1, sentence2;
         sentence1 = "I love football";
         sentence2 = "I hate tennis";
+        int x;
         double alpha, beta;
-        alpha = 0.5;
+        alpha = 0.5 ;
         beta = 0.3;
         ExtendedLeskAlgorithm leskE = new ExtendedLeskAlgorithm(null, null, semanticResource);
         SentenceSenseDisambiguator sentenceDisambiguator = new SentenceSenseDisambiguator("", leskE, semanticResource, posTagger);
