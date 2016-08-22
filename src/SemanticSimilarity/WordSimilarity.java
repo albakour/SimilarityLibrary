@@ -25,7 +25,7 @@ public class WordSimilarity {
     /**
      * @param args the command line arguments
      */
-    public static String dictionaryPath = "C:\\Users\\sobhy\\Documents\\NetBeansProjects\\4th year project libs\\WordNet-3.0\\dict";
+    public static String dictionaryPath ="wordnet\\WordNet-3.0\\dict";
     public static String englishTaggerPath = "stanfordTagger\\models\\wsj-0-18-left3words-distsim.tagger";
 
     public static void main(String[] args) {
@@ -39,8 +39,8 @@ public class WordSimilarity {
         PartOfSpeech.Type pos=PartOfSpeech.Type.adjective;
 
         String sentence1, sentence2;
-        sentence1 = "cases and deaths have been reported in  countries";
-        sentence2 = "reported new cases for a total of with deaths";
+        sentence1 = "worldwide 123 sars cases and 543 deaths have been reported in 342 countries";
+        sentence2 = "Tiwan reported 125 new cases for a 234 total of with 432 deaths";
         double alpha, beta;
         alpha = 0.5;
         beta = 0.3;
@@ -49,6 +49,8 @@ public class WordSimilarity {
 
        PathMeasure measure = new PathMeasure(null, null, semanticResource);
        //JiangMeasure measure =new JiangMeasure(null, null, semanticResource);
+        //WuPalmerMeasure measure =new WuPalmerMeasure(null, null, semanticResource);
+        //LeakcockChodorowMeasure measure =new LeakcockChodorowMeasure(null, null, semanticResource);
         InformationContentCalculator icCalc= InformationContentCalculatorFactory.produceObject();
         LiVectorBasedSentenceSimilarityAlgorithm algo = new LiVectorBasedSentenceSimilarityAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure,icCalc );
         System.out.println("Vector Similarity Algorithm");

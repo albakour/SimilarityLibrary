@@ -40,8 +40,19 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
     @Override
     public double calculateSimilarity() {
         double meanLength = this.sentenceWords1.length + this.sentenceWords2.length;
-        meanLength /= 2;
-        double result = this.matchingAlgorithm.getOptimalMatchWeight() / meanLength;
+        int length = 0;
+        for (int i = 0; i < sentenceWords1.length; i++) {
+            if (!Helper.Helper.ignore(sentenceWords1[i].value)) {
+                length++;
+            }
+        }
+        for (int i = 0; i < sentenceWords2.length; i++) {
+            if (!Helper.Helper.ignore(sentenceWords2[i].value)) {
+                length++;
+            }
+        }
+        meanLength=length;
+        double result = (2*this.matchingAlgorithm.getOptimalMatchWeight() )/ meanLength;
         return result;
     }
 
@@ -50,7 +61,6 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
      *
      * @return
      */
-
     private double[][] generateBipartiteGraph() {
         int dim1 = this.sentenceWords1.length;
         int dim2 = this.sentenceWords2.length;
@@ -75,7 +85,6 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
      * @param word2
      * @return
      */
-
     private double wordWordSimilarity(Word word1, Word word2) {
         double max = -1;
         if (!word1.isDisambiguated || !word2.isDisambiguated) {

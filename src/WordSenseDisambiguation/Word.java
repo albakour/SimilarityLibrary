@@ -28,7 +28,6 @@ public class Word {
 
     PartOfSpeech.Type partOfSpeech;
 
-
     public Word(String value, SemanticResourceHandler resource) {
         this.value = value;
         this.semanticResource = resource;
@@ -50,11 +49,17 @@ public class Word {
         }
         disambiguatedSenses = senses;
         isDisambiguated = true;
+        if (possibleSenses.length == 0||disambiguatedSenses.length == 0) {
+            this.isDisambiguated = false;
+        }
     }
 
     public void generatePossibleSenses() {
         possibleSenses = semanticResource.getWrappingConcepts(this);
-        if (this.partOfSpeech==PartOfSpeech.Type.noun) {
+        if (possibleSenses.length == 0) {
+            this.isDisambiguated = false;
+        }
+        if (this.partOfSpeech == PartOfSpeech.Type.noun) {
             for (int i = 0; i < possibleSenses.length; i++) {
                 possibleSenses[i].inTaxonomy = true;
             }
@@ -76,11 +81,14 @@ public class Word {
         }
         return false;
     }
-    public void setPArtOfSpeech(Type pos){
-        if(pos==Type.noun)
-        this.partOfSpeech=pos;
+
+    public void setPArtOfSpeech(Type pos) {
+        if (pos == Type.noun) {
+            this.partOfSpeech = pos;
+        }
     }
-    public Type getPartOfSpeech(){
+
+    public Type getPartOfSpeech() {
         return this.partOfSpeech;
     }
 
