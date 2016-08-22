@@ -119,6 +119,9 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
     private int calculateWordEntry(Word word, Word[] sentence) {
         // after applying the disambiguation algorithm, the word may still have multiple senses
         //so there is an array of senses
+        if(!word.isDisambiguated){
+            return 0;
+        }
         Concept[] senses = word.getDisamiguatedSenses();
 
         // scores for each sense of the word to pick the highest
@@ -171,6 +174,9 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
      */
     private double getConceptWordScore(Concept concept, Word word) {
         double max = -1;
+        if(!word.isDisambiguated){
+            return 0;
+        }
         Concept[] senses = word.getDisamiguatedSenses();
         // getting the max relatedness
         for (Concept sense : senses) {

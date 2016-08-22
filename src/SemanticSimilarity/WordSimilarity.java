@@ -25,7 +25,7 @@ public class WordSimilarity {
     /**
      * @param args the command line arguments
      */
-    public static String dictionaryPath ="wordnet\\WordNet-3.0\\dict";
+    public static String dictionaryPath = "wordnet\\WordNet-3.0\\dict";
     public static String englishTaggerPath = "stanfordTagger\\models\\wsj-0-18-left3words-distsim.tagger";
 
     public static void main(String[] args) {
@@ -36,31 +36,41 @@ public class WordSimilarity {
         DefaultConceptRelatednessMeasureFactory.produceObject("zero", semanticResource);
         StanfordPostHandler posTagger = new StanfordPostHandler();
         posTagger.connect(englishTaggerPath);
-        PartOfSpeech.Type pos=PartOfSpeech.Type.adjective;
+        PartOfSpeech.Type pos = PartOfSpeech.Type.adjective;
 
         String sentence1, sentence2;
-        sentence1 = "worldwide 123 sars cases and 543 deaths have been reported in 342 countries";
-        sentence2 = "Tiwan reported 125 new cases for a 234 total of with 432 deaths";
+        sentence1 ="worldwide 123 sars cases and 543 deaths have been reported in 342 countries";
+        sentence2 ="Tiwan reported 125 new cases for a 234 total of with 432 deaths";
         double alpha, beta;
         alpha = 0.5;
         beta = 0.3;
         ExtendedLeskAlgorithm leskE = new ExtendedLeskAlgorithm(null, null, semanticResource);
         SentenceSenseDisambiguator sentenceDisambiguator = new SentenceSenseDisambiguator("", leskE, semanticResource, posTagger);
 
-       PathMeasure measure = new PathMeasure(null, null, semanticResource);
-       //JiangMeasure measure =new JiangMeasure(null, null, semanticResource);
+        PathMeasure measure = new PathMeasure(null, null, semanticResource);
+        //JiangMeasure measure =new JiangMeasure(null, null, semanticResource);
         //WuPalmerMeasure measure =new WuPalmerMeasure(null, null, semanticResource);
         //LeakcockChodorowMeasure measure =new LeakcockChodorowMeasure(null, null, semanticResource);
-        InformationContentCalculator icCalc= InformationContentCalculatorFactory.produceObject();
-        LiVectorBasedSentenceSimilarityAlgorithm algo = new LiVectorBasedSentenceSimilarityAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure,icCalc );
+        InformationContentCalculator icCalc = InformationContentCalculatorFactory.produceObject();
+        LiVectorBasedSentenceSimilarityAlgorithm vecAlgo = new LiVectorBasedSentenceSimilarityAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure, icCalc);
         System.out.println("Vector Similarity Algorithm");
-        algo.execute();
-        System.out.println(algo.getSimilarity());
+        vecAlgo.execute();
+        System.out.println(vecAlgo.getSimilarity());
         System.out.println("Optimal Graph Matching Similarity Algorithm");
-        BipertiteGraphOptimalMatchingAlgorithm omAlgo =new BipertiteGraphOptimalMatchingAlgorithm(null);
-        OptimalGraphMatchingBasedSimilarityAlgorithm omSimAlgo= new OptimalGraphMatchingBasedSimilarityAlgorithm(sentence1, sentence2, omAlgo,sentenceDisambiguator, measure);
+        BipertiteGraphOptimalMatchingAlgorithm omAlgo = new BipertiteGraphOptimalMatchingAlgorithm(null);
+        OptimalGraphMatchingBasedSimilarityAlgorithm omSimAlgo = new OptimalGraphMatchingBasedSimilarityAlgorithm(sentence1, sentence2, omAlgo, sentenceDisambiguator, measure);
         omSimAlgo.execute();
         System.out.println(omSimAlgo.getSimilarity());
+        WordOrderAlgorithm wordOrderAlgo = new WordOrderAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure);
+        wordOrderAlgo.execute();
+        System.out.println("WordOrder Algorithm");
+        System.out.println(wordOrderAlgo.getSimilarity());
+        System.out.println("Combined Algorithm Vector & Word Order :");
+        double sim = 0.8 * vecAlgo.getSimilarity() + 0.2 * wordOrderAlgo.getSimilarity();
+        System.out.println(sim);
+        System.out.println("Combined Algorithm Optimal Matching & Word Order :");
+        sim = 0.8 * omSimAlgo.getSimilarity() + 0.2 * wordOrderAlgo.getSimilarity();
+        System.out.println(sim);
         // init to collect statistics 
         //        //semanticResource.init();
         //        System.out.println("number of concepts : " + semanticResource.getNumberOfConcepts());
