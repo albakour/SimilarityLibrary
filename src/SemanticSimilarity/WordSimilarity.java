@@ -5,7 +5,6 @@
  */
 package SemanticSimilarity;
 
-import ConceptRelatedness.Concept.Concept;
 import WordSenseDisambiguation.*;
 import ConceptRelatedness.*;
 import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.*;
@@ -15,6 +14,7 @@ import ConceptRelatedness.ConceptSimilarity.PathMeasures.*;
 import ConceptRelatedness.SemanticResource.*;
 import partOfSpeechTagger.*;
 import sentenceSimilarity.*;
+import ConceptRelatedness.Concept.*;
 
 /**
  *
@@ -36,22 +36,29 @@ public class WordSimilarity {
         DefaultConceptRelatednessMeasureFactory.produceObject("zero", semanticResource);
         StanfordPostHandler posTagger = new StanfordPostHandler();
         posTagger.connect(englishTaggerPath);
+        PartOfSpeech.Type pos=PartOfSpeech.Type.adjective;
 
         String sentence1, sentence2;
-        sentence1 = "I love football";
-        sentence2 = "I hate tennis";
-        int x;
+        sentence1 = "cases and deaths have been reported in  countries";
+        sentence2 = "reported new cases for a total of with deaths";
         double alpha, beta;
-        alpha = 0.5 ;
+        alpha = 0.5;
         beta = 0.3;
         ExtendedLeskAlgorithm leskE = new ExtendedLeskAlgorithm(null, null, semanticResource);
         SentenceSenseDisambiguator sentenceDisambiguator = new SentenceSenseDisambiguator("", leskE, semanticResource, posTagger);
 
-        JiangCornathMeasure measure = new JiangCornathMeasure(null, null, alpha, beta, semanticResource);
+       PathMeasure measure = new PathMeasure(null, null, semanticResource);
+       //JiangMeasure measure =new JiangMeasure(null, null, semanticResource);
         InformationContentCalculator icCalc= InformationContentCalculatorFactory.produceObject();
         LiVectorBasedSentenceSimilarityAlgorithm algo = new LiVectorBasedSentenceSimilarityAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure,icCalc );
+        System.out.println("Vector Similarity Algorithm");
         algo.execute();
         System.out.println(algo.getSimilarity());
+        System.out.println("Optimal Graph Matching Similarity Algorithm");
+        BipertiteGraphOptimalMatchingAlgorithm omAlgo =new BipertiteGraphOptimalMatchingAlgorithm(null);
+        OptimalGraphMatchingBasedSimilarityAlgorithm omSimAlgo= new OptimalGraphMatchingBasedSimilarityAlgorithm(sentence1, sentence2, omAlgo,sentenceDisambiguator, measure);
+        omSimAlgo.execute();
+        System.out.println(omSimAlgo.getSimilarity());
         // init to collect statistics 
         //        //semanticResource.init();
         //        System.out.println("number of concepts : " + semanticResource.getNumberOfConcepts());
@@ -80,13 +87,15 @@ public class WordSimilarity {
         //        sentenceDisambiguator.execute(windowSize);
         //        sentenceDisambiguator.printDisambiguatedWords();
         //
-        //        wordForm1 = "boy";
-        //        wordForm2 = "girl";
-        //        Word[] words = new Word[2];
-        //        Word word1 = new Word(wordForm1);
-        //        Word word2 = new Word(wordForm2);
-        //        words[0] = word1;
-        //        words[1] = word2;
+//                String wordForm1 = "football";
+//                String wordForm2 = "tennis";
+//                Word[] words = new Word[2];
+//                Word word1 = new Word(wordForm1,semanticResource);
+//                Word word2 = new Word(wordForm2,semanticResource);
+//                word1.setPArtOfSpeech(PartOfSpeech.Type.noun);
+//                word2.setPArtOfSpeech(PartOfSpeech.Type.noun);
+//                words[0] = word1;
+//                words[1] = word2;
         //
         //        System.out.println("Disambiguating the word(" + wordForm2 + ") in (" + wordForm1 + " " + wordForm2 + ").");
         //        OrginalLeskAlgorithm lesk = new OrginalLeskAlgorithm(words, word2, semanticResource);
@@ -107,10 +116,12 @@ public class WordSimilarity {
         //        for (int i=0;i<senses.length;i++) {
         //            System.out.println(i+"-"+senses[i].getDefinition());
         //        }
-        //        concept1 = ((WordNetHandler) semanticResource).getWrappingConcepts(wordForm1)[0];
-        //        concept2 = ((WordNetHandler) semanticResource).getWrappingConcepts(wordForm2)[0];
-        //        concept1.inTaxonomy=true;
-        //        concept2.inTaxonomy=true;
+//                Concept concept1 = ((WordNetHandler) semanticResource).getWrappingConcepts(word1)[0];
+//                Concept concept2 = ((WordNetHandler) semanticResource).getWrappingConcepts(word2)[0];
+//                concept1.inTaxonomy=true;
+//                concept1.setPartOfSpeech(PartOfSpeech.Type.noun);
+//                concept2.inTaxonomy=true;
+//                concept2.setPartOfSpeech(PartOfSpeech.Type.noun);
         //
         //        GlossAlgorithm g = new TraditionalGlossMeasure(concept1, concept2, semanticResource);
         //        g.execute();
@@ -144,94 +155,94 @@ public class WordSimilarity {
         ////        for (int i = 0; i < len; i++) {
         ////            System.out.println(i + "-" + list.get(i).representAsString());
         ////        }
-        //        PathMeasure pM = new PathMeasure(concept1, concept2, semanticResource);
-        //        pM.execute();
-        //        System.out.println("Path Measure : " + pM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + pM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + pM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + pM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(pM.getExplanation());
-        //        System.out.println("");
-        //
-        //        WuPalmerMeasure wpM = new WuPalmerMeasure(concept1, concept2, semanticResource);
-        //        wpM.execute();
-        //        System.out.println("Wu Palmer's Measure : " + wpM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + wpM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + wpM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + wpM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(wpM.getExplanation());
-        //        System.out.println("");
-        //
-        //        LeakcockChodorowMeasure lcM = new LeakcockChodorowMeasure(concept1, concept2, semanticResource);
-        //        lcM.execute();
-        //        System.out.println("Leakcock & Chodorow's Measure : " + lcM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + lcM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + lcM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + lcM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(lcM.getExplanation());
-        //        System.out.println("");
-        //
-        //        double alpha, beta;
-        //        // optimal parameters experimentally
-        //        alpha = 0.2;
-        //        beta = 0.6;
-        //        LiMeasure lM = new LiMeasure(alpha, beta, concept1, concept2, semanticResource);
-        //        lM.execute();
-        //        System.out.println("Li's Measure : " + lM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + lM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + lM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + lM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(lM.getExplanation());
-        //
-        //        System.out.println("____________________________");
-        //        System.out.println("Information Content Measures");
-        //        System.out.println("");
-        //
-        //        ReniskMeasure rM = new ReniskMeasure(concept1, concept2, semanticResource);
-        //        rM.execute();
-        //        System.out.println("Renisk's Measure : " + rM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + rM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + rM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + rM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(rM.getExplanation());
-        //
-        //        LinMeasure linM = new LinMeasure(concept1, concept2, semanticResource);
-        //        linM.execute();
-        //        System.out.println("Lin's Measure : " + linM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + linM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + linM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + linM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(linM.getExplanation());
-        //
-        //        JiangMeasure jM = new JiangMeasure(concept1, concept2, semanticResource);
-        //        jM.execute();
-        //        System.out.println("Jiang's Meausure : " + jM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + jM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + jM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + jM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(jM.getExplanation());
-        //
-        //        System.out.println("____________________________");
-        //        System.out.println("Hybrid Measures");
-        //        System.out.println("");
-        //        // the experimantal optimal values
-        //        alpha = 0.5;
-        //        beta = 0.3;
-        //        JiangCornathMeasure jcM = new JiangCornathMeasure(concept1, concept2, alpha, beta, semanticResource);
-        //        jcM.execute();
-        //        System.out.println("Jiang & Cornath's Measure : " + jcM.getRelatedness());
-        //        System.out.println("Normalized Similarity : " + jcM.getNormalizedRelatedness());
-        //        System.out.println("Maximum Similarity : " + jcM.getMaximum());
-        //        System.out.println("Minimum Similarity : " + jcM.getMinimum());
-        //        System.out.println("Explanation : ");
-        //        System.out.println(jcM.getExplanation());
+//                PathMeasure pM = new PathMeasure(concept1, concept2, semanticResource);
+//                pM.execute();
+//                System.out.println("Path Measure : " + pM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + pM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + pM.getMaximum());
+//                System.out.println("Minimum Similarity : " + pM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(pM.getExplanation());
+//                System.out.println("");
+//        
+//                WuPalmerMeasure wpM = new WuPalmerMeasure(concept1, concept2, semanticResource);
+//                wpM.execute();
+//                System.out.println("Wu Palmer's Measure : " + wpM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + wpM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + wpM.getMaximum());
+//                System.out.println("Minimum Similarity : " + wpM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(wpM.getExplanation());
+//                System.out.println("");
+//        
+//                LeakcockChodorowMeasure lcM = new LeakcockChodorowMeasure(concept1, concept2, semanticResource);
+//                lcM.execute();
+//                System.out.println("Leakcock & Chodorow's Measure : " + lcM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + lcM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + lcM.getMaximum());
+//                System.out.println("Minimum Similarity : " + lcM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(lcM.getExplanation());
+//                System.out.println("");
+//        
+//                //double alpha, beta;
+//                // optimal parameters experimentally
+//                alpha = 0.2;
+//                beta = 0.6;
+//                LiMeasure lM = new LiMeasure(alpha, beta, concept1, concept2, semanticResource);
+//                lM.execute();
+//                System.out.println("Li's Measure : " + lM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + lM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + lM.getMaximum());
+//                System.out.println("Minimum Similarity : " + lM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(lM.getExplanation());
+//        
+//                System.out.println("____________________________");
+//                System.out.println("Information Content Measures");
+//                System.out.println("");
+//        
+//                ReniskMeasure rM = new ReniskMeasure(concept1, concept2, semanticResource);
+//                rM.execute();
+//                System.out.println("Renisk's Measure : " + rM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + rM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + rM.getMaximum());
+//                System.out.println("Minimum Similarity : " + rM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(rM.getExplanation());
+//        
+//                LinMeasure linM = new LinMeasure(concept1, concept2, semanticResource);
+//                linM.execute();
+//                System.out.println("Lin's Measure : " + linM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + linM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + linM.getMaximum());
+//                System.out.println("Minimum Similarity : " + linM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(linM.getExplanation());
+//        
+//                JiangMeasure jM = new JiangMeasure(concept1, concept2, semanticResource);
+//                jM.execute();
+//                System.out.println("Jiang's Meausure : " + jM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + jM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + jM.getMaximum());
+//                System.out.println("Minimum Similarity : " + jM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(jM.getExplanation());
+//        
+//                System.out.println("____________________________");
+//                System.out.println("Hybrid Measures");
+//                System.out.println("");
+//                // the experimantal optimal values
+//                alpha = 0.5;
+//                beta = 0.3;
+//                JiangCornathMeasure jcM = new JiangCornathMeasure(concept1, concept2, alpha, beta, semanticResource);
+//                jcM.execute();
+//                System.out.println("Jiang & Cornath's Measure : " + jcM.getRelatedness());
+//                System.out.println("Normalized Similarity : " + jcM.getNormalizedRelatedness());
+//                System.out.println("Maximum Similarity : " + jcM.getMaximum());
+//                System.out.println("Minimum Similarity : " + jcM.getMinimum());
+//                System.out.println("Explanation : ");
+//                System.out.println(jcM.getExplanation());
     }
 
 }

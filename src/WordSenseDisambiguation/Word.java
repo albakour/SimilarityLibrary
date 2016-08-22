@@ -5,10 +5,11 @@
  */
 package WordSenseDisambiguation;
 
-import ConceptRelatedness.SemanticResource.WordNetHandler;
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 import java.util.ArrayList;
+import partOfSpeechTagger.*;
+import partOfSpeechTagger.PartOfSpeech.Type;
 
 /**
  *
@@ -22,14 +23,16 @@ public class Word {
     // applying Disambiuation Algorithm
     private Concept[] disambiguatedSenses;
     public boolean isDisambiguated;
-    public boolean isNoun;
     private boolean areSensesGenerated;
     SemanticResourceHandler semanticResource;
+
+    PartOfSpeech.Type partOfSpeech;
+
 
     public Word(String value, SemanticResourceHandler resource) {
         this.value = value;
         this.semanticResource = resource;
-        
+
     }
 
     public Concept[] getDisamiguatedSenses() {
@@ -51,9 +54,9 @@ public class Word {
 
     public void generatePossibleSenses() {
         possibleSenses = semanticResource.getWrappingConcepts(this);
-        if(this.isNoun){
-            for(int i=0;i<possibleSenses.length;i++){
-                possibleSenses[i].inTaxonomy=true;
+        if (this.partOfSpeech==PartOfSpeech.Type.noun) {
+            for (int i = 0; i < possibleSenses.length; i++) {
+                possibleSenses[i].inTaxonomy = true;
             }
         }
 
@@ -62,7 +65,7 @@ public class Word {
     public Concept[] getPossibleSenses() {
         if (!areSensesGenerated) {
             generatePossibleSenses();
-            areSensesGenerated=true;
+            areSensesGenerated = true;
         }
         return possibleSenses;
     }
@@ -72,6 +75,13 @@ public class Word {
             return true;
         }
         return false;
+    }
+    public void setPArtOfSpeech(Type pos){
+        if(pos==Type.noun)
+        this.partOfSpeech=pos;
+    }
+    public Type getPartOfSpeech(){
+        return this.partOfSpeech;
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package partOfSpeechTagger;
 
+import WordSenseDisambiguation.Word;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 /**
@@ -23,7 +24,7 @@ public abstract class PostHandler<T> {
         taggerPath = path;
     }
 
-    public abstract boolean[] getNouns(String sentence);
+    public abstract PartOfSpeech.Type[] getPosTypes(String sentence);
 
     public abstract String getTaggedSentence(String sentence);
 

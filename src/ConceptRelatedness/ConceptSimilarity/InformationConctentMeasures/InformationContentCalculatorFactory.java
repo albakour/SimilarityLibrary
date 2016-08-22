@@ -25,7 +25,8 @@ public class InformationContentCalculatorFactory {
     public static InformationContentCalculator produceObject() {
         InformationContentCalculator object;
         //object=new SecoEtAlInformationContentFunction();
-        object = new SanchezIsernBatetInformationContentFuntion(semanticResource);
+        //object = new SanchezIsernBatetInformationContentFuntion(semanticResource);
+        object=new UnitInformationContentCalculator(semanticResource);
         return object;
     }
 

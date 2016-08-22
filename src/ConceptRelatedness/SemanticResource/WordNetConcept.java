@@ -6,23 +6,26 @@
 package ConceptRelatedness.SemanticResource;
 
 import ConceptRelatedness.Concept.Concept;
-import edu.smu.tspell.wordnet.NounSynset;
+import edu.smu.tspell.wordnet.*;
 import edu.smu.tspell.wordnet.Synset;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import Helper.Helper;
+import edu.smu.tspell.wordnet.AdjectiveSynset;
+import java.util.ArrayList;
+import partOfSpeechTagger.PartOfSpeech;
 
 /**
  *
  * @author sobhy
  * @param <Synset>
  */
-public class WordNetConcept extends Concept<Synset,WordNetHandler> {
+public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     // the value here has a synset type
-    public WordNetConcept( Synset value) {
+    public WordNetConcept(Synset value) {
         super(value);
         this.setSemanticResource(WordNetHandler.getInstance());
     }
@@ -55,15 +58,36 @@ public class WordNetConcept extends Concept<Synset,WordNetHandler> {
     @Override
     public Concept[] getDirectAncestors() {
         // the result in synset form
-        Synset[] synsets = ((NounSynset)this.getValue()).getHypernyms();
-        int len = synsets.length;
-        // to be returned 
-        WordNetConcept[] result = new WordNetConcept[len];
-        // converting form array of synset to array of concept
-        for (int i = 0; i < len; i++) {
-            result[i] = new WordNetConcept(synsets[i]);
+        Synset[] synsets;
+        // in case of noun concept
+        if (this.partOfSpeech == PartOfSpeech.Type.noun) {
+            synsets = ((NounSynset) this.getValue()).getHypernyms();
+            int len = synsets.length;
+            WordNetConcept[] result = new WordNetConcept[len];
+            // converting form array of synset to array of concept
+            for (int i = 0; i < len; i++) {
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                // specify the part os speech for the ancestors
+                concept.partOfSpeech = PartOfSpeech.Type.noun;
+                result[i] = concept;
+            }
+            return result;
         }
-        return result;
+        if (this.partOfSpeech == PartOfSpeech.Type.verb) {
+            // in case of verb concept
+            synsets = ((VerbSynset) this.getValue()).getHypernyms();
+            int len = synsets.length;
+            WordNetConcept[] result = new WordNetConcept[len];
+            // converting form array of synset to array of concept
+            for (int i = 0; i < len; i++) {
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                // specify the part os speech for the ancestors
+                concept.partOfSpeech = PartOfSpeech.Type.verb;
+                result[i] = concept;
+            }
+            return result;
+        }
+        return new Concept[0];
 
     }
 
@@ -74,21 +98,41 @@ public class WordNetConcept extends Concept<Synset,WordNetHandler> {
     @Override
     public Concept[] getDirectSuccessors() {
         // the result in synset form
-        Synset[] synsets = ((NounSynset) this.getValue()).getHyponyms();
-        int len = synsets.length;
-        // to be returned 
-        WordNetConcept[] result = new WordNetConcept[len];
-        // converting form array of synset to array of concept
-        for (int i = 0; i < len; i++) {
-            result[i] = new WordNetConcept(synsets[i]);
+        Synset[] synsets;
+        if (this.partOfSpeech == PartOfSpeech.Type.noun) {
+            synsets = ((NounSynset) this.getValue()).getHyponyms();
+            int len = synsets.length;
+            WordNetConcept[] result = new WordNetConcept[len];
+            // converting form array of synset to array of concept
+            for (int i = 0; i < len; i++) {
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                // specify the part os speech for the ancestors
+                concept.partOfSpeech = PartOfSpeech.Type.noun;
+                result[i] = concept;
+            }
+            return result;
         }
-        return result;
+        if (this.partOfSpeech == PartOfSpeech.Type.verb) {
+            // get successors on synset form
+            synsets = ((VerbSynset) this.getValue()).getEntailments();
+            int len = synsets.length;
+            WordNetConcept[] result = new WordNetConcept[len];
+            // converting form array of synset to array of concept
+            for (int i = 0; i < len; i++) {
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                // specify the part os speech for the ancestors
+                concept.partOfSpeech = PartOfSpeech.Type.verb;
+                result[i] = concept;
+            }
+            return result;
+        }
+        return new Concept[0];
     }
 
     @Override
     public int getDepth() {
         // the root of the taxonomy
-        
+
         // we need to cast semanticResource here becaue findPathToSuccessor 
         // is a in just WordNetHandler and not overriden 
         // because it is not neccessary that the ontology which represent the semantic resource
@@ -239,36 +283,141 @@ public class WordNetConcept extends Concept<Synset,WordNetHandler> {
     @Override
     public String[] getDirectWordBag() {
         String[] result;
-        Synset synset =  this.value;
+        Synset synset = this.value;
         String definition = synset.getDefinition();
+        // the words from the definition of the concept itself
         result = Helper.getWordsFormSentence(definition);
         return result;
     }
 
-
+    @Override
     public Concept[] getContainingConcepts() {
-        Synset[] synsets = ((NounSynset) value).getPartHolonyms();
-        int len = synsets.length;
-        // to be returned 
-        WordNetConcept[] result = new WordNetConcept[len];
-        // converting form array of synset to array of concept
-        for (int i = 0; i < len; i++) {
-            result[i] = new WordNetConcept(synsets[i]);
+        // just for nouns
+        if (this.partOfSpeech == PartOfSpeech.Type.noun) {
+            Synset[] synsets;
+            synsets = ((NounSynset) value).getPartHolonyms();
+            int len = synsets.length;
+            // to be returned 
+            WordNetConcept[] result = new WordNetConcept[len];
+            // converting form array of synset to array of concept
+            for (int i = 0; i < len; i++) {
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.noun);
+                result[i] = concept;
+            }
+            return result;
         }
-        return result;
+        return new Concept[0];
+
     }
 
     @Override
     public Concept[] getPartsConcepts() {
-        Synset[] synsets = ((NounSynset) value).getPartMeronyms();
-        int len = synsets.length;
-        // to be returned 
-        WordNetConcept[] result = new WordNetConcept[len];
-        // converting form array of synset to array of concept
-        for (int i = 0; i < len; i++) {
-            result[i] = new WordNetConcept(synsets[i]);
+        // just for noun concepts
+        if (this.partOfSpeech == PartOfSpeech.Type.noun) {
+            Synset[] synsets = ((NounSynset) value).getPartMeronyms();
+            int len = synsets.length;
+            // to be returned 
+            WordNetConcept[] result = new WordNetConcept[len];
+            // converting form array of synset to array of concept
+            for (int i = 0; i < len; i++) {
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.noun);
+                result[i] = concept;
+            }
+            return result;
+        }
+        return new Concept[0];
+    }
+
+    @Override
+    public Concept[] getSimilarConcepts() {
+        // the result on list form
+        ArrayList<WordNetConcept> resultList = new ArrayList<>();
+        Synset[] synsets;
+        WordNetConcept concept;
+        if (this.partOfSpeech == PartOfSpeech.Type.adjective) {
+            // get similar concepts
+            synsets = ((AdjectiveSynset) value).getSimilar();
+            for (int i = 0; i < synsets.length; i++) {
+                concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.adjective);
+                resultList.add(concept);
+            }
+            // get related concepts
+            synsets = ((AdjectiveSynset) value).getRelated();
+            for (int i = 0; i < synsets.length; i++) {
+                concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.adjective);
+                resultList.add(concept);
+            }
+            // adverb case
+        } else if (this.partOfSpeech == PartOfSpeech.Type.adverb) {
+            // get similar concepts
+            // usages are nouns
+            synsets = ((AdverbSynset) value).getUsages();
+            for (int i = 0; i < synsets.length; i++) {
+                concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.noun);
+                resultList.add(concept);
+            }
+        }
+        // there is no similar concepts provided by the 
+        // ontology for nouns and verbs
+        WordNetConcept[] result = new WordNetConcept[resultList.size()];
+        for (int i = 0; i < resultList.size(); i++) {
+            result[i] = resultList.get(i);
         }
         return result;
+    }
+
+    /**
+     *
+     * @return the concepts that can be categorized in the same group as this
+     * concept
+     */
+    @Override
+    public Concept[] getGroupConcepts() {
+        // the result on list form
+        ArrayList<WordNetConcept> resultList = new ArrayList<>();
+        Synset[] synsets;
+        WordNetConcept concept;
+        if (this.partOfSpeech == PartOfSpeech.Type.adjective) {
+            // get attributes that can be considered as group concepts
+            synsets = ((AdjectiveSynset) value).getAttributes();
+            for (int i = 0; i < synsets.length; i++) {
+                concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.noun);
+                resultList.add(concept);
+            }
+
+            //  adverbs case
+        } else if (this.partOfSpeech == PartOfSpeech.Type.adverb) {
+            // return noun sysets
+            // the topics of the adverb can be considered as its group of concepts
+            synsets = ((AdverbSynset) value).getTopics();
+            for (int i = 0; i < synsets.length; i++) {
+                concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.noun);
+                resultList.add(concept);
+            }
+        }
+        //  verbs case
+        if (this.partOfSpeech == PartOfSpeech.Type.verb) {
+            synsets = ((VerbSynset) value).getVerbGroup();
+            for (int i = 0; i < synsets.length; i++) {
+                concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.verb);
+                resultList.add(concept);
+            }
+        }
+        // there is no such group for nouns 
+        WordNetConcept[] result = new WordNetConcept[resultList.size()];
+        for (int i = 0; i < resultList.size(); i++) {
+            result[i] = resultList.get(i);
+        }
+        return result;
+
     }
 
     /**
@@ -276,10 +425,9 @@ public class WordNetConcept extends Concept<Synset,WordNetHandler> {
      * @return
      */
     @Override
-    public String getDefinition(){
+    public String getDefinition() {
         return value.getDefinition();
-        
+
     }
-    
 
 }

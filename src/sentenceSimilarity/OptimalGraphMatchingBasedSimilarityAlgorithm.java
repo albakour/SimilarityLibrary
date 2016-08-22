@@ -30,41 +30,57 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
      */
     @Override
     public void execute() {
-        this.bipartiteGraph=generateBipartiteGraph();
+        this.bipartiteGraph = generateBipartiteGraph();
         this.matchingAlgorithm.setGraph(bipartiteGraph);
         this.matchingAlgorithm.execute();
+        this.similarity = calculateSimilarity();
 
     }
 
     @Override
     public double calculateSimilarity() {
-        return this.matchingAlgorithm.getOptimalMatchWeight();
+        double meanLength = this.sentenceWords1.length + this.sentenceWords2.length;
+        meanLength /= 2;
+        double result = this.matchingAlgorithm.getOptimalMatchWeight() / meanLength;
+        return result;
     }
+
     /**
      * generate the graph of relatedness between words of the two sentences
-     * @return 
+     *
+     * @return
      */
 
     private double[][] generateBipartiteGraph() {
-        int dim1=this.sentenceWords1.length;
-        int dim2=this.sentenceWords2.length;
-        double [][] graph=new double[dim1][dim2];
+        int dim1 = this.sentenceWords1.length;
+        int dim2 = this.sentenceWords2.length;
+        double[][] graph = new double[dim1][dim2];
         for (int i = 0; i < dim1; i++) {
             for (int j = 0; j < dim2; j++) {
-                graph[i][j]=wordWordSimilarity(sentenceWords1[i],sentenceWords2[j]);
+                if (sentenceWords1[i].equals(sentenceWords2[j])) {
+                    graph[i][j] = 1.0;
+                } else {
+                    graph[i][j] = wordWordSimilarity(sentenceWords1[i], sentenceWords2[j]);
+                }
             }
         }
         return graph;
     }
+
     /**
-     * calculate the relatedness between words which is the max relatedness between the senses 
+     * calculate the relatedness between words which is the max relatedness
+     * between the senses
+     *
      * @param word1
      * @param word2
-     * @return 
+     * @return
      */
 
     private double wordWordSimilarity(Word word1, Word word2) {
         double max = -1;
+        if (!word1.isDisambiguated || !word2.isDisambiguated) {
+            return 0;
+        }
         Concept[] senses1 = word1.getDisamiguatedSenses();
         Concept[] senses2 = word2.getDisamiguatedSenses();
         for (Concept sense1 : senses1) {
@@ -74,7 +90,7 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
                 this.conceptRelatednessAlgorithm.setSecondConcept(sense2);
                 this.conceptRelatednessAlgorithm.execute();
                 relatedness = this.conceptRelatednessAlgorithm.getNormalizedRelatedness();
-                if (max > relatedness) {
+                if (max < relatedness) {
                     max = relatedness;
                 }
             }

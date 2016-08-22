@@ -9,7 +9,7 @@ import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import WordSenseDisambiguation.SentenceSenseDisambiguator;
 import WordSenseDisambiguation.Word;
 import WordSenseDisambiguation.WordSenseDisambiguationAlgorithm;
-import partOfSpeechTagger.PostHandler;
+
 
 /**
  *

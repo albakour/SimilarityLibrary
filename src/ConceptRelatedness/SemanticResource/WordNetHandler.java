@@ -9,6 +9,7 @@ import Helper.ConceptNode;
 import ConceptRelatedness.Concept.Concept;
 import WordSenseDisambiguation.Word;
 import edu.smu.tspell.wordnet.*;
+import partOfSpeechTagger.PartOfSpeech;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -82,29 +83,35 @@ public class WordNetHandler extends SemanticResourceHandler {
     public Concept[] getWrappingConcepts(Word word) {
         Synset[] synsets;
         ArrayList<WordNetConcept> resultList = new ArrayList<>();
-        if (word.isNoun) {
+        if (word.getPartOfSpeech() == PartOfSpeech.Type.noun) {
             synsets = database.getSynsets(word.value, SynsetType.NOUN, true);
-
             for (int i = 0; i < synsets.length; i++) {
-                resultList.add(new WordNetConcept(synsets[i]));
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.noun);
+                resultList.add(concept);
             }
-        }else {
+        } else if (word.getPartOfSpeech() == PartOfSpeech.Type.verb) {
             synsets = database.getSynsets(word.value, SynsetType.VERB, true);
             for (int i = 0; i < synsets.length; i++) {
-                resultList.add(new WordNetConcept(synsets[i]));
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.verb);
+                resultList.add(concept);
             }
+        } else if (word.getPartOfSpeech() == PartOfSpeech.Type.adjective) {
             synsets = database.getSynsets(word.value, SynsetType.ADJECTIVE, true);
             for (int i = 0; i < synsets.length; i++) {
-                resultList.add(new WordNetConcept(synsets[i]));
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.adjective);
+                resultList.add(concept);
             }
-            synsets = database.getSynsets(word.value, SynsetType.ADJECTIVE_SATELLITE, true);
-            for (int i = 0; i < synsets.length; i++) {
-                resultList.add(new WordNetConcept(synsets[i]));
-            }
+        } else if (word.getPartOfSpeech() == PartOfSpeech.Type.adverb) {
             synsets = database.getSynsets(word.value, SynsetType.ADVERB, true);
             for (int i = 0; i < synsets.length; i++) {
+                WordNetConcept concept = new WordNetConcept(synsets[i]);
+                concept.setPartOfSpeech(PartOfSpeech.Type.adverb);
                 resultList.add(new WordNetConcept(synsets[i]));
             }
+        } else if (word.getPartOfSpeech() == PartOfSpeech.Type.other) {
         }
         WordNetConcept[] result = new WordNetConcept[resultList.size()];
         for (int i = 0; i < resultList.size(); i++) {

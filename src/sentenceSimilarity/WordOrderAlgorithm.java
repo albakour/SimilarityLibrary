@@ -29,6 +29,7 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
     private Word[] combinedSentence;
     // is final because it would be assigned only once
     private final boolean isCombined;
+    //default 0.5
     private double threshold;
 
     public WordOrderAlgorithm(String sentece1, String sentence2, SentenceSenseDisambiguator<WSDA> disambiguator,RelatAlgo conceptRelatednessAlgorithm) {

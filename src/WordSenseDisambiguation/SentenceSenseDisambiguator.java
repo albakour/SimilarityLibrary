@@ -9,6 +9,7 @@ import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 import Helper.Helper;
 import partOfSpeechTagger.PostHandler;
+import partOfSpeechTagger.*;
 
 /**
  *
@@ -45,7 +46,11 @@ public class SentenceSenseDisambiguator<T extends WordSenseDisambiguationAlgorit
         for (int i = 0; i < sentenceWords.length; i++) {
             wordSenseDisambiguator.setTargetWord(sentenceWords[i]);
             wordSenseDisambiguator.execute();
-            sentenceWords[i] = wordSenseDisambiguator.getDisambiguatedWord();
+            // because the disambiguator may set null the word
+            // if it has to be ignored becauese of the part of speech
+            if (wordSenseDisambiguator.getDisambiguatedWord() != null) {
+                sentenceWords[i] = wordSenseDisambiguator.getDisambiguatedWord();
+            }
             wordSenseDisambiguator.setSentenceWords(sentenceWords);
         }
         isDisambiguated = true;
@@ -61,11 +66,11 @@ public class SentenceSenseDisambiguator<T extends WordSenseDisambiguationAlgorit
     private Word[] generateSentenceWords() {
         String[] strings = Helper.getWordsFormSentence(sentence);
         String taggedSentence = posTagger.getTaggedSentence(sentence);
-        boolean[] nounMarker = this.posTagger.getNouns(taggedSentence);
+        PartOfSpeech.Type[] types = this.posTagger.getPosTypes(taggedSentence);
         Word[] result = new Word[strings.length];
         for (int i = 0; i < strings.length; i++) {
             Word word = new Word(strings[i], this.semanticResource);
-            word.isNoun = nounMarker[i];
+            word.partOfSpeech = types[i];
             result[i] = word;
         }
         return result;

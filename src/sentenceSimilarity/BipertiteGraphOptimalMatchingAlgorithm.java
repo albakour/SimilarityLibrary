@@ -188,7 +188,7 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
         for (int i = 0; i < tempGraph.length; i++) {
             for (int j = 0; j < tempGraph.length; j++) {
                 if (!leftCover[i] && !rightCover[j]) {
-                    if (delta < tempGraph[i][j]) {
+                    if (delta > tempGraph[i][j]) {
                         delta = tempGraph[i][j];
                     }
                 }

@@ -9,6 +9,7 @@ import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
 import java.util.ArrayList;
+import partOfSpeechTagger.PartOfSpeech;
 
 /**
  *
@@ -32,6 +33,9 @@ public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatedn
     public void execute() {
         setTargetWordIndex();
         if(targetWordIndex==-1){
+            return;
+        }
+        if(targetWord.partOfSpeech== PartOfSpeech.Type.other){
             return;
         }
         setWindowIndexes();

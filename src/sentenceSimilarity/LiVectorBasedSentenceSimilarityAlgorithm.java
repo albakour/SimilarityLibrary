@@ -20,12 +20,12 @@ import partOfSpeechTagger.PostHandler;
  * @param <RelatAlgo>
  * @param <POST>
  */
-public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, RelatAlgo extends ConceptsRelatednessAlgorithm> extends VectorBasedSentenceSimilarityAlgorithm<WSDA,RelatAlgo> {
+public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, RelatAlgo extends ConceptsRelatednessAlgorithm> extends VectorBasedSentenceSimilarityAlgorithm<WSDA, RelatAlgo> {
 
     // the combine result
     private Word[] combinedSentence;
     // is final because it would be assigned only once
-    private final boolean isCombined;
+    private boolean isCombined;
     private final InformationContentCalculator informationContentCalculator;
     private double threshold;
     // internal member to contact between functions
@@ -38,11 +38,12 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
         super(sentence1, sentence2, disambiguator, relatednessAlgorithm);
         isCombined = false;
         this.informationContentCalculator = informationContentCalculator;
-        threshold=0.1;
+        threshold = 0.1;
     }
 
     /**
      * calculate the sentence vector
+     *
      * @param sentence
      * @return
      */
@@ -51,59 +52,70 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
         // to do the combination once at the most
         if (!isCombined) {
             combinedSentence = Helper.combineSentences(this.sentenceWords1, this.sentenceWords2);
+            isCombined = true;
         }
         // vector entries
         ArrayList<Double> projections = new ArrayList<>();
         // calculating vector entries
         for (int i = 0; i < combinedSentence.length; i++) {
-            projections.add(calculateProjection(sentence, i));
+            double proj = calculateProjection(sentence, i);
+            projections.add(proj);
         }
-        Vector result=new Vector(projections);
+        Vector result = new Vector(projections);
         return result;
     }
 
-
     /**
-     *  to calculate the entry having the index i in a vector
+     * to calculate the entry having the index i in a vector
+     *
      * @param sentence
      * @param i
-     * @return 
+     * @return
      */
-
     private double calculateProjection(Word[] sentence, int i) {
         // do the combination just once
         // it is not neccessary to do the combination because it is certainly done
         if (!isCombined) {
             combinedSentence = Helper.combineSentences(this.sentenceWords1, this.sentenceWords2);
+            isCombined = true;
         }
         // toataly similar
-        if (Helper.SentenceContainsWord(sentence, combinedSentence[i])>=0) {
+        if (Helper.SentenceContainsWord(sentence, combinedSentence[i]) >= 0) {
             return 1.0;
         }
         // search for the best similar concept and get the weight
         return calculateWordEntry(combinedSentence[i], sentence);
 
     }
+
     /**
-     * to calculate the entry of the vector when the word is not common between the two sentences
+     * to calculate the entry of the vector when the word is not common between
+     * the two sentences
+     *
      * @param word
      * @param sentence
-     * @return 
+     * @return
      */
-
     private double calculateWordEntry(Word word, Word[] sentence) {
         // after applying the disambiguation algorithm, the word may still have multiple senses
         //so there is an array of senses
+
+        // may the disambiguator set DisamiguatedSenses to null 
+        // because of the part of speech
+        if (!word.isDisambiguated) {
+            return 0;
+        }
         Concept[] senses = word.getDisamiguatedSenses();
         //the variable theat holds the closest sense to the target word senses
         // this value is just for initializing it is never used;
-        Concept[] closestSenses =new Concept[senses.length] ;
+
+        Concept[] closestSenses = new Concept[senses.length];
 
         // scores for each sense of the word to pick the highest
         double[] scores = new double[senses.length];
         for (int i = 0; i < senses.length; i++) {
             double max = -1;
-            Concept closestSense=null;
+            Concept closestSense = null;
             // iterate to get the closest word to the current sense
             for (int j = 0; j < sentence.length; j++) {
                 double tempMax;
@@ -116,7 +128,7 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
             // the score of the current sense is the maximum relatedness with the words of the other senetnce 
             scores[i] = max;
             // store the sense that make the maximum relatedness
-            closestSenses[i]=closestSense;
+            closestSenses[i] = closestSense;
         }
         double max = -1;
         int senseIndex = -1;
@@ -130,7 +142,7 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
         // the formula is 
         //vector[i]=relatedness(ith word,combined sentence)*IC(senes(ith word))*IC(closestSense(ith word))
         double weight = scores[senseIndex];
-        if(weight<threshold){
+        if (weight < threshold) {
             return 0.0;
         }
         weight *= this.informationContentCalculator.calculateIC(senses[senseIndex]);
@@ -138,16 +150,24 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
         return weight;
 
     }
-/**
- * get the relatedness between a word and a concept which is 
- * the maximum relatedness with the senses of the word
- * @param concept
- * @param word
- * @return 
- */
+
+    /**
+     * get the relatedness between a word and a concept which is the maximum
+     * relatedness with the senses of the word
+     *
+     * @param concept
+     * @param word
+     * @return
+     */
     private double getConceptWordScore(Concept concept, Word word) {
         double max = -1;
+        // because may the disambiguator set  getDisamiguatedSenses to null 
+        // if the word has to be ignored because of the part of speech 
+        if (!word.isDisambiguated) {
+            return 0;
+        }
         Concept[] senses = word.getDisamiguatedSenses();
+
         // getting the max relatedness
         for (Concept sense : senses) {
             double rel;
@@ -165,8 +185,8 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
         return max;
     }
 
-    public void setThreshold(double threshold){
-        this.threshold=threshold;
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
     }
 
 }

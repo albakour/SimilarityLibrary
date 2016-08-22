@@ -8,13 +8,14 @@ package ConceptRelatedness.Concept;
 import ConceptRelatedness.GlossMesures.GlossAlgorithm;
 import java.util.ArrayList;
 import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import partOfSpeechTagger.PartOfSpeech;
 
 /**
  *
  * @author sobhy
  * @param <V>
  */
-public abstract class Concept<V,S extends SemanticResourceHandler> {
+public abstract class Concept<V, S extends SemanticResourceHandler> {
 
     /**
      *
@@ -25,6 +26,7 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
     protected V value;
     protected S semanticResource;
     public boolean inTaxonomy;
+    protected PartOfSpeech.Type partOfSpeech;
     ArrayList<Concept> RelatedConcepts;
 
     public Concept(V value) {
@@ -37,7 +39,7 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
      * make sure that any class implements this class should implement this
      * function not inherit it form Object class
      *
-     * @return 
+     * @return
      */
     public abstract String representAsString();
 
@@ -50,6 +52,8 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
 
     /**
      * to get the first level of parents (if there are more than on parent)
+     *
+     * @return
      */
     public abstract Concept[] getDirectSuccessors();
 
@@ -84,12 +88,16 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
 
     public abstract String[] getDirectWordBag();
 
-
-    
     // get concepts that contain this cocept
     public abstract Concept[] getContainingConcepts();
+
     // get concepts that represent parts of this concept
     public abstract Concept[] getPartsConcepts();
+
+    public abstract Concept[] getGroupConcepts();
+
+    public abstract Concept[] getSimilarConcepts();
+
     public abstract String getDefinition();
 
     /**
@@ -99,7 +107,8 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
      * @return
      */
     public abstract boolean equals(Concept concept);
-        public ArrayList<String> getWordBag(GlossAlgorithm algorithm) {
+
+    public ArrayList<String> getWordBag(GlossAlgorithm algorithm) {
         RelatedConceptsGenerator generator = algorithm.getRelatedConceptsGenerator();
         this.RelatedConcepts = generator.generate(this);
         ArrayList<String> result = new ArrayList<>();
@@ -111,14 +120,21 @@ public abstract class Concept<V,S extends SemanticResourceHandler> {
         }
         return result;
     }
-    public V getValue(){
+
+    public V getValue() {
         return value;
     }
-    public S getSemanticResource(){
+
+    public S getSemanticResource() {
         return this.semanticResource;
     }
-    public void setSemanticResource(S resource){
-        this.semanticResource=resource;
+
+    public void setSemanticResource(S resource) {
+        this.semanticResource = resource;
+    }
+
+    public void setPartOfSpeech(PartOfSpeech.Type pos) {
+        this.partOfSpeech = pos;
     }
 
 }

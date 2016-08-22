@@ -41,8 +41,8 @@ public abstract class SimilarityAlgorithm extends ConceptsRelatednessAlgorithm {
         this.normalizedRelatedness = defaultMeasure.getNormalizedRelatedness();
         this.explanation = "\nDefault Measure Result\n" + defaultMeasure.getExplanation();
         this.formula = "\n Default Measure Formula\n" + defaultMeasure.getFormula();
-        this.maximum = defaultMeasure.getMaximum();
-        this.minimum = defaultMeasure.getMinimum();
+        //this.maximum = defaultMeasure.getMaximum();
+        //this.minimum = defaultMeasure.getMinimum();
 
     }
 
