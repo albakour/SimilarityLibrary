@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author sobhy
  */
-public class TraditionalRelatedConceptsGenerator extends RelatedConceptsGenerator{
+public class TraditionalRelatedConceptsGenerator implements RelatedConceptsGenerator{
     // 
     
     //this function donot

@@ -1,0 +1,453 @@
+_______________________________
+threshold = 0.5
+_______________________________
++++++++++++++++++++++++++++
+measure for verbs : zero
++++++++++++++++++++++++++++
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.PathMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.2866554022528956
+precision : 0.15873015873015872
+recall : 1.0
+rejection : 0.03076923076923077
+accuracy : 0.18461538461538463
+F Measure : 0.27397260273972607
+
+correlation between vector with order algorithm and human estimation : 0.33347190265959414
+precision : 0.16129032258064516
+recall : 1.0
+rejection : 0.046153846153846156
+accuracy : 0.2
+F Measure : 0.27777777777777773
+
+correlation between om  algorithm and human estimation : 0.4656232013828097
+precision : 0.3333333333333333
+recall : 0.7
+rejection : 0.6307692307692307
+accuracy : 0.7384615384615385
+F Measure : 0.45161290322580644
+
+correlation between om with order algorithm and human estimation : 0.481278364857438
+precision : 0.3333333333333333
+recall : 0.6
+rejection : 0.6615384615384615
+accuracy : 0.7538461538461538
+F Measure : 0.42857142857142855
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.WuPalmerMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.53052889416045
+precision : 0.25
+recall : 1.0
+rejection : 0.38461538461538464
+accuracy : 0.5384615384615384
+F Measure : 0.4
+
+correlation between vector with order algorithm and human estimation : 0.5522978263564446
+precision : 0.2903225806451613
+recall : 0.9
+rejection : 0.5076923076923077
+accuracy : 0.6461538461538462
+F Measure : 0.4390243902439024
+
+correlation between om  algorithm and human estimation : 0.6356431030010306
+precision : 0.5454545454545454
+recall : 0.6
+rejection : 0.7692307692307693
+accuracy : 0.8615384615384616
+F Measure : 0.5714285714285713
+
+correlation between om with order algorithm and human estimation : 0.6399427052725188
+precision : 0.5555555555555556
+recall : 0.5
+rejection : 0.7846153846153846
+accuracy : 0.8615384615384616
+F Measure : 0.5263157894736842
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.5552715996448269
+precision : 0.24390243902439024
+recall : 1.0
+rejection : 0.36923076923076925
+accuracy : 0.5230769230769231
+F Measure : 0.39215686274509803
+
+correlation between vector with order algorithm and human estimation : 0.5793406234757531
+precision : 0.3125
+recall : 1.0
+rejection : 0.5076923076923077
+accuracy : 0.6615384615384615
+F Measure : 0.47619047619047616
+
+correlation between om  algorithm and human estimation : 0.6252281269363893
+precision : 0.7142857142857143
+recall : 0.5
+rejection : 0.8153846153846154
+accuracy : 0.8923076923076924
+F Measure : 0.588235294117647
+
+correlation between om with order algorithm and human estimation : 0.6326501755716121
+precision : 0.8333333333333334
+recall : 0.5
+rejection : 0.8307692307692308
+accuracy : 0.9076923076923077
+F Measure : 0.625
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.6796549955724742
+precision : 0.391304347826087
+recall : 0.9
+rejection : 0.6307692307692307
+accuracy : 0.7692307692307693
+F Measure : 0.5454545454545454
+
+correlation between vector with order algorithm and human estimation : 0.6897201110461548
+precision : 0.42105263157894735
+recall : 0.8
+rejection : 0.676923076923077
+accuracy : 0.8
+F Measure : 0.5517241379310345
+
+correlation between om  algorithm and human estimation : 0.696286288009181
+precision : 0.8333333333333334
+recall : 0.5
+rejection : 0.8307692307692308
+accuracy : 0.9076923076923077
+F Measure : 0.625
+
+correlation between om with order algorithm and human estimation : 0.6965786801542685
+precision : 0.8333333333333334
+recall : 0.5
+rejection : 0.8307692307692308
+accuracy : 0.9076923076923077
+F Measure : 0.625
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+best accuracy :0.9076923076923077
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best precision :0.8333333333333334
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best recall :1.0
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.PathMeasure
+best algorithm :vector
+^^^^^^^^^^^^^^^^
+best rejection :0.8307692307692308
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best f mesure :0.625
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+best correlation :0.6965786801542685
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+best algorithm :optimal mtching with order
++++++++++++++++++++++++++++
+measure for verbs : traditional gloss
++++++++++++++++++++++++++++
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.PathMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.2955373014706712
+precision : 0.15873015873015872
+recall : 1.0
+rejection : 0.03076923076923077
+accuracy : 0.18461538461538463
+F Measure : 0.27397260273972607
+
+correlation between vector with order algorithm and human estimation : 0.34253482785045264
+precision : 0.15873015873015872
+recall : 1.0
+rejection : 0.03076923076923077
+accuracy : 0.18461538461538463
+F Measure : 0.27397260273972607
+
+correlation between om  algorithm and human estimation : 0.4674571144012056
+precision : 0.36363636363636365
+recall : 0.8
+rejection : 0.6307692307692307
+accuracy : 0.7538461538461538
+F Measure : 0.5000000000000001
+
+correlation between om with order algorithm and human estimation : 0.4829535811651774
+precision : 0.3333333333333333
+recall : 0.6
+rejection : 0.6615384615384615
+accuracy : 0.7538461538461538
+F Measure : 0.42857142857142855
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.WuPalmerMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.5342665154057941
+precision : 0.24390243902439024
+recall : 1.0
+rejection : 0.36923076923076925
+accuracy : 0.5230769230769231
+F Measure : 0.39215686274509803
+
+correlation between vector with order algorithm and human estimation : 0.5563317837108546
+precision : 0.28125
+recall : 0.9
+rejection : 0.49230769230769234
+accuracy : 0.6307692307692307
+F Measure : 0.4285714285714286
+
+correlation between om  algorithm and human estimation : 0.6400794307624532
+precision : 0.5454545454545454
+recall : 0.6
+rejection : 0.7692307692307693
+accuracy : 0.8615384615384616
+F Measure : 0.5714285714285713
+
+correlation between om with order algorithm and human estimation : 0.643398743997311
+precision : 0.5555555555555556
+recall : 0.5
+rejection : 0.7846153846153846
+accuracy : 0.8615384615384616
+F Measure : 0.5263157894736842
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.5615038481423462
+precision : 0.22727272727272727
+recall : 1.0
+rejection : 0.3230769230769231
+accuracy : 0.47692307692307695
+F Measure : 0.37037037037037035
+
+correlation between vector with order algorithm and human estimation : 0.5855627167499491
+precision : 0.29411764705882354
+recall : 1.0
+rejection : 0.47692307692307695
+accuracy : 0.6307692307692307
+F Measure : 0.45454545454545453
+
+correlation between om  algorithm and human estimation : 0.6264395450211228
+precision : 0.7142857142857143
+recall : 0.5
+rejection : 0.8153846153846154
+accuracy : 0.8923076923076924
+F Measure : 0.588235294117647
+
+correlation between om with order algorithm and human estimation : 0.6333896356419607
+precision : 0.8333333333333334
+recall : 0.5
+rejection : 0.8307692307692308
+accuracy : 0.9076923076923077
+F Measure : 0.625
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.6808072587341697
+precision : 0.391304347826087
+recall : 0.9
+rejection : 0.6307692307692307
+accuracy : 0.7692307692307693
+F Measure : 0.5454545454545454
+
+correlation between vector with order algorithm and human estimation : 0.6915222798665261
+precision : 0.42857142857142855
+recall : 0.9
+rejection : 0.6615384615384615
+accuracy : 0.8
+F Measure : 0.5806451612903225
+
+correlation between om  algorithm and human estimation : 0.6982050423449234
+precision : 0.8333333333333334
+recall : 0.5
+rejection : 0.8307692307692308
+accuracy : 0.9076923076923077
+F Measure : 0.625
+
+correlation between om with order algorithm and human estimation : 0.697812444878805
+precision : 0.8333333333333334
+recall : 0.5
+rejection : 0.8307692307692308
+accuracy : 0.9076923076923077
+F Measure : 0.625
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+best accuracy :0.9076923076923077
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best precision :0.8333333333333334
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best recall :1.0
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.PathMeasure
+best algorithm :vector
+^^^^^^^^^^^^^^^^
+best rejection :0.8307692307692308
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best f mesure :0.625
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+best algorithm :optimal mtching with order
+best correlation :0.6982050423449234
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+best algorithm :optimal mtching
++++++++++++++++++++++++++++
+measure for verbs : extended gloss
++++++++++++++++++++++++++++
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.PathMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.20412327045386036
+precision : 0.15625
+recall : 1.0
+rejection : 0.015384615384615385
+accuracy : 0.16923076923076924
+F Measure : 0.2702702702702703
+
+correlation between vector with order algorithm and human estimation : 0.2623874297467924
+precision : 0.15625
+recall : 1.0
+rejection : 0.015384615384615385
+accuracy : 0.16923076923076924
+F Measure : 0.2702702702702703
+
+correlation between om  algorithm and human estimation : 0.3976653112588224
+precision : 0.2962962962962963
+recall : 0.8
+rejection : 0.5538461538461539
+accuracy : 0.676923076923077
+F Measure : 0.43243243243243246
+
+correlation between om with order algorithm and human estimation : 0.4155056868253158
+precision : 0.2608695652173913
+recall : 0.6
+rejection : 0.5846153846153846
+accuracy : 0.676923076923077
+F Measure : 0.36363636363636365
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.WuPalmerMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.4853245170320149
+precision : 0.18518518518518517
+recall : 1.0
+rejection : 0.16923076923076924
+accuracy : 0.3230769230769231
+F Measure : 0.3125
+
+correlation between vector with order algorithm and human estimation : 0.5104111434433795
+precision : 0.21739130434782608
+recall : 1.0
+rejection : 0.2923076923076923
+accuracy : 0.4461538461538462
+F Measure : 0.3571428571428571
+
+correlation between om  algorithm and human estimation : 0.5847753091068711
+precision : 0.46153846153846156
+recall : 0.6
+rejection : 0.7384615384615385
+accuracy : 0.8307692307692308
+F Measure : 0.5217391304347826
+
+correlation between om with order algorithm and human estimation : 0.5887340785478786
+precision : 0.45454545454545453
+recall : 0.5
+rejection : 0.7538461538461538
+accuracy : 0.8307692307692308
+F Measure : 0.47619047619047616
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.LeakcockChodorowMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.4816188728127023
+precision : 0.18181818181818182
+recall : 1.0
+rejection : 0.15384615384615385
+accuracy : 0.3076923076923077
+F Measure : 0.3076923076923077
+
+correlation between vector with order algorithm and human estimation : 0.5141703003132756
+precision : 0.22727272727272727
+recall : 1.0
+rejection : 0.3230769230769231
+accuracy : 0.47692307692307695
+F Measure : 0.37037037037037035
+
+correlation between om  algorithm and human estimation : 0.562003134533399
+precision : 0.5555555555555556
+recall : 0.5
+rejection : 0.7846153846153846
+accuracy : 0.8615384615384616
+F Measure : 0.5263157894736842
+
+correlation between om with order algorithm and human estimation : 0.571898919940143
+precision : 0.625
+recall : 0.5
+rejection : 0.8
+accuracy : 0.8769230769230769
+F Measure : 0.5555555555555556
+
+##########################
+class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+##########################
+correlation between vector algorithm and human estimation : 0.629118061217436
+precision : 0.3225806451612903
+recall : 1.0
+rejection : 0.5230769230769231
+accuracy : 0.676923076923077
+F Measure : 0.4878048780487805
+
+correlation between vector with order algorithm and human estimation : 0.641468751732624
+precision : 0.32142857142857145
+recall : 0.9
+rejection : 0.5538461538461539
+accuracy : 0.6923076923076923
+F Measure : 0.4736842105263158
+
+correlation between om  algorithm and human estimation : 0.6419681738360523
+precision : 0.7142857142857143
+recall : 0.5
+rejection : 0.8153846153846154
+accuracy : 0.8923076923076924
+F Measure : 0.588235294117647
+
+correlation between om with order algorithm and human estimation : 0.6429054028186363
+precision : 0.8333333333333334
+recall : 0.5
+rejection : 0.8307692307692308
+accuracy : 0.9076923076923077
+F Measure : 0.625
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+best accuracy :0.9076923076923077
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best precision :0.8333333333333334
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best recall :1.0
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.PathMeasure
+best algorithm :vector
+^^^^^^^^^^^^^^^^
+best rejection :0.8307692307692308
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+best algorithm :optimal mtching with order
+^^^^^^^^^^^^^^^^
+best f mesure :0.625
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+best algorithm :optimal mtching with order
+best correlation :0.6429054028186363
+measure : class ConceptRelatedness.ConceptSimilarity.PathMeasures.LiMeasure
+best algorithm :optimal mtching with order

@@ -7,7 +7,7 @@ package ConceptRelatedness.ConceptSimilarity;
 
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.*;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 
 /**
  *
@@ -35,7 +35,7 @@ public abstract class SimilarityAlgorithm extends ConceptsRelatednessAlgorithm {
     protected void defaultExecution() {
         ConceptsRelatednessAlgorithm defaultMeasure = DefaultConceptRelatednessMeasureFactory.getCurrentObject();
         defaultMeasure.setFirstConcept(firstConcept);
-        defaultMeasure.setFirstConcept(secondConcept);
+        defaultMeasure.setSecondConcept(secondConcept);
         defaultMeasure.execute();
         this.relatedness = defaultMeasure.getRelatedness();
         this.normalizedRelatedness = defaultMeasure.getNormalizedRelatedness();

@@ -7,9 +7,10 @@ package WordSenseDisambiguation;
 
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import java.util.ArrayList;
-import partOfSpeechTagger.PartOfSpeech;
+import PosTagging.PartOfSpeech;
+import PosTagging.PostHandler;
 
 /**
  *
@@ -40,6 +41,14 @@ public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatedn
         }
         setWindowIndexes();
         Concept[] possibleSenses = targetWord.getPossibleSenses();
+        //to remove
+//        if(targetWord.value.equals("hearts")){
+//
+//            for(Concept sen: possibleSenses){
+//                System.out.println(sen.getDefinition());
+//            }
+//        }
+        
         int len = possibleSenses.length;
         double scores[] = new double[len];
         double maxScore = -1;

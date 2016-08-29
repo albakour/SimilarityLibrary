@@ -28,13 +28,14 @@ public class UnWeightedBipertiteGraph {
     // iterate on the adjacent vertices of a vertex 
     private int[] mateInMatching;//  mateInMatching[v]=w ,w=the vertex to which v is matched in the current matching,
     //w=-1 if v is not in the matching
-    private int[] leftMatches; // the left part of the matching array  
+    // private int[] leftMatches; // the left part of the matching array  
     private boolean[] inMinVertexCover;  // inMinVertexCover[v] = true iff v is in min vertex cover
     private boolean[] leftMinVertexCover; // left part of min vertex cover
     private boolean[] rightMinVertexCover;// right part of min vertex cover
     private boolean[] marked;            // marked[v] = true iff v is reachable via alternating path
     private int[] edgeTo;                // edgeTo[v] = w if v-w is last edge on path to v 
     // it stores the vertex that was the cause why v in the the alternating path
+    private boolean[][] optimalMatching;
 
     public UnWeightedBipertiteGraph(boolean[][] graph) {
         this.bipartiteGraph = graph;
@@ -89,7 +90,7 @@ public class UnWeightedBipertiteGraph {
         bestMatch();
         minVertexCover();
         fillVertexCover();
-        fillLeftMathces();
+        fillOptimalMatching();
 
     }
 
@@ -260,7 +261,6 @@ public class UnWeightedBipertiteGraph {
      *
      * @return
      */
-
     public boolean isPerfect() {
         if (2 * cardinality == vertices) {
             return true;
@@ -278,7 +278,6 @@ public class UnWeightedBipertiteGraph {
      *
      * @return
      */
-
     public int getCardinality() {
         return this.cardinality;
     }
@@ -286,7 +285,6 @@ public class UnWeightedBipertiteGraph {
     /**
      * divide the vertex cover into left and right parts
      */
-
     private void fillVertexCover() {
         leftMinVertexCover = new boolean[leftVertices];
         for (int i = 0; i < leftVertices; i++) {
@@ -308,18 +306,18 @@ public class UnWeightedBipertiteGraph {
 
     }
 
-    public int[] getleftMatches() {
-        return leftMatches;
+    private void fillOptimalMatching() {
+        optimalMatching = new boolean[leftVertices][rightVertices];
+        for (int i = 0; i < leftVertices; i++) {
+            if (mateInMatching[i] != -1) {
+                int match = mateInMatching[i] - leftVertices;
+                optimalMatching[i][match] = true;
+            }
+        }
     }
 
-    /**
-     *fill the left part of matching 
-     */
-    private void fillLeftMathces() {
-        leftMatches = new int[leftVertices];
-        for (int i = 0; i < leftVertices; i++) {
-            leftMatches[i] = mateInMatching[i] - leftVertices;
-        }
+    public boolean[][] getOptimalMatching() {
+        return this.optimalMatching;
     }
 
 }

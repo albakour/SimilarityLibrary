@@ -10,14 +10,13 @@ import WordSenseDisambiguation.SentenceSenseDisambiguator;
 import WordSenseDisambiguation.Word;
 import WordSenseDisambiguation.WordSenseDisambiguationAlgorithm;
 
-
 /**
  *
  * @author sobhy
- * @param <WSDA> Word Sense Disambiguation Algorithm  
+ * @param <WSDA> Word Sense Disambiguation Algorithm
  * @param <RelatAlgo> Relatedness between Concepts Algorithm
- * @param <POST>   Part Of Speech Tagger
-
+ * @param <POST> Part Of Speech Tagger
+ *
  */
 public abstract class SentenceSimilarityAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, RelatAlgo extends ConceptsRelatednessAlgorithm> {
 
@@ -42,6 +41,7 @@ public abstract class SentenceSimilarityAlgorithm<WSDA extends WordSenseDisambig
     }
 
     public abstract void execute();
+
     public abstract double calculateSimilarity();
 
     public void setWindowSize(int size) {
@@ -53,7 +53,8 @@ public abstract class SentenceSimilarityAlgorithm<WSDA extends WordSenseDisambig
         this.sentenceSenseisambiguator.execute(windowSize);
         return this.sentenceSenseisambiguator.getDisambiguatedWords();
     }
-    public double getSimilarity(){
+
+    public double getSimilarity() {
         return this.similarity;
     }
 

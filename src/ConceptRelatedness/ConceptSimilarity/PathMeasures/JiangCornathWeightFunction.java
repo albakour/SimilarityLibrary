@@ -7,7 +7,7 @@ package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 
 import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.InformationContentCalculator;
 import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.InformationContentCalculatorFactory;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
 /**

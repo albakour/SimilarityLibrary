@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author sobhy
  */
-public abstract class RelatedConceptsGenerator {
+public interface RelatedConceptsGenerator {
     
     public abstract ArrayList<Concept> generate(Concept concept);
     

@@ -6,7 +6,7 @@
 package ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures;
 
 import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.InformationContentCalculator;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
 /**

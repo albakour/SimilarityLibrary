@@ -5,9 +5,10 @@
  */
 package ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures;
 
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.ConceptSimilarity.SimilarityAlgorithm;
+import PosTagging.PartOfSpeech;
 
 /**
  *
@@ -29,13 +30,25 @@ public abstract class InformationContentAlgorithm extends SimilarityAlgorithm {
      */
     @Override
     public void execute() {
-        if (!this.firstConcept.inTaxonomy || !this.secondConcept.inTaxonomy) {
+        if (this.firstConcept.getPartOfSpeech() != this.secondConcept.getPartOfSpeech()) {
+            this.relatedness = 0;
+            this.normalizedRelatedness = 0;
+            explanation="incompaible part of speech";
+            return;
+        }
+        if(this.firstConcept.getPartOfSpeech()!=PartOfSpeech.Type.noun||this.secondConcept.getPartOfSpeech()!=PartOfSpeech.Type.noun){
             defaultExecution();
             return;
         }
 
         // findLcs() should be called before  calculateSimilarity() because the second may use the first
         lcs = semanticResource.getLcs(firstConcept, secondConcept);
+        if (lcs == null) {
+            this.relatedness = 0;
+            this.normalizedRelatedness = 0;
+            explanation = "lcs not found";
+            return;
+        }
 
         relatedness = calculateRelatedness();
         normalizedRelatedness = normalizeRelatedness();
@@ -43,7 +56,6 @@ public abstract class InformationContentAlgorithm extends SimilarityAlgorithm {
         explanation += "Lowest Common Subsummer : \n";
         explanation += lcs.representAsString();
         explanation += "\nInformation content function formula : " + informationContentFunction.getFormula();
-
     }
 
 }

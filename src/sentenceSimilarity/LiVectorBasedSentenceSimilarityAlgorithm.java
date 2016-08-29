@@ -7,11 +7,12 @@ package sentenceSimilarity;
 
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.InformationContentCalculator;
+import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.InformationContentCalculatorFactory;
 import WordSenseDisambiguation.*;
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import Helper.Helper;
 import java.util.ArrayList;
-import partOfSpeechTagger.PostHandler;
+import PosTagging.PostHandler;
 
 /**
  *
@@ -33,11 +34,11 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
     //
     private Concept matchedSense;
 
-    public LiVectorBasedSentenceSimilarityAlgorithm(String sentence1, String sentence2, SentenceSenseDisambiguator<WSDA> disambiguator, RelatAlgo relatednessAlgorithm, InformationContentCalculator informationContentCalculator) {
+    public LiVectorBasedSentenceSimilarityAlgorithm(String sentence1, String sentence2, SentenceSenseDisambiguator<WSDA> disambiguator, RelatAlgo relatednessAlgorithm ) {
 
         super(sentence1, sentence2, disambiguator, relatednessAlgorithm);
         isCombined = false;
-        this.informationContentCalculator = informationContentCalculator;
+        this.informationContentCalculator = InformationContentCalculatorFactory.produceObject();
         threshold = 0.1;
     }
 
@@ -81,6 +82,9 @@ public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisa
         }
         // toataly similar
         if (Helper.SentenceContainsWord(sentence, combinedSentence[i]) >= 0) {
+            if (Helper.ignore(combinedSentence[i].value)) {
+                return 0;
+            }
             return 1.0;
         }
         // search for the best similar concept and get the weight

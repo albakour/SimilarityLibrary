@@ -5,7 +5,7 @@
  */
 package ConceptRelatedness.GlossMesures;
 
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.*;
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ public abstract class GlossAlgorithm<T extends RelatedConceptsGenerator> extends
         wordsBag1 = firstConcept.getWordBag(this);
         wordsBag2 = secondConcept.getWordBag(this);
         relatedness = calculateRelatedness();
+        normalizedRelatedness=Math.tanh(relatedness/25);
 
     }
 

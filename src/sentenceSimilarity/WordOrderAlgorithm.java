@@ -12,7 +12,7 @@ import WordSenseDisambiguation.SentenceSenseDisambiguator;
 import WordSenseDisambiguation.Word;
 import WordSenseDisambiguation.WordSenseDisambiguationAlgorithm;
 import java.util.ArrayList;
-import partOfSpeechTagger.PostHandler;
+import PosTagging.PostHandler;
 
 /**
  *
@@ -101,10 +101,10 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
         // word match case
         int index = Helper.SentenceContainsWord(sentence, combinedSentence[i]);
         if (index >= 0) {
-            return index;
+            return index+1;
         }
         // search for the best similar concept and get the index
-        return calculateWordEntry(combinedSentence[i], sentence);
+        return calculateWordEntry(combinedSentence[i], sentence)+1;
 
     }
 

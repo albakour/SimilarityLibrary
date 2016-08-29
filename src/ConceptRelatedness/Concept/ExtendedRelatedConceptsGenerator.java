@@ -5,18 +5,19 @@
  */
 package ConceptRelatedness.Concept;
 
-import partOfSpeechTagger.PartOfSpeech;
+import PosTagging.PartOfSpeech;
 import java.util.ArrayList;
 
 /**
  *
  * @author sobhy
  */
-public class ExtendedRelatedConceptsGenerator extends RelatedConceptsGenerator {
+public class ExtendedRelatedConceptsGenerator implements RelatedConceptsGenerator {
 
     @Override
     public ArrayList<Concept> generate(Concept concept) {
         ArrayList<Concept> result = new ArrayList<>();
+        result.add(concept);
         if (concept.partOfSpeech == PartOfSpeech.Type.noun) {
             Concept[] containing = concept.getContainingConcepts();
             Concept[] parts = concept.getPartsConcepts();

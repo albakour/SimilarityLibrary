@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ConceptRelatedness.SemanticResource;
+package SemanticResource;
 
+import ConceptRelatedness.Concept.WordNetConcept;
 import Helper.ConceptNode;
 import ConceptRelatedness.Concept.Concept;
 import WordSenseDisambiguation.Word;
 import edu.smu.tspell.wordnet.*;
-import partOfSpeechTagger.PartOfSpeech;
+import PosTagging.PartOfSpeech;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

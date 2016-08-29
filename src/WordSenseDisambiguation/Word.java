@@ -5,11 +5,11 @@
  */
 package WordSenseDisambiguation;
 
+import PosTagging.PartOfSpeech;
 import ConceptRelatedness.Concept.Concept;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import java.util.ArrayList;
-import partOfSpeechTagger.*;
-import partOfSpeechTagger.PartOfSpeech.Type;
+import PosTagging.PartOfSpeech.Type;
 
 /**
  *

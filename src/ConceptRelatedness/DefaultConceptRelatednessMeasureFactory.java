@@ -6,7 +6,7 @@
 package ConceptRelatedness;
 
 import ConceptRelatedness.GlossMesures.*;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 
 /**
  *

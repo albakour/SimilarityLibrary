@@ -5,20 +5,21 @@
  */
 package WordSenseDisambiguation;
 
-import ConceptRelatedness.GlossMesures.ExtendedGlossMasure;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
-
+import ConceptRelatedness.GlossMesures.*;
+import SemanticResource.SemanticResourceHandler;
+import PosTagging.PostHandler;
 
 /**
  *
  * @author sobhy
  */
-public class ExtendedLeskAlgorithm extends MaximizeRelatednessWSDAlgorithm<ExtendedGlossMasure>{
+public class ExtendedLeskAlgorithm extends MaximizeRelatednessWSDAlgorithm<ExtendedGlossMasure> {
 
-    public ExtendedLeskAlgorithm(Word[] sentenceWords, Word target,SemanticResourceHandler resource) {
-        super(sentenceWords, target,resource);
-        this.setRelatednessMeasure(new ExtendedGlossMasure(null, null, resource));
-      
+    public ExtendedLeskAlgorithm(Word[] sentenceWords, Word target, SemanticResourceHandler resource) {
+        super(sentenceWords, target, resource);
+        ExtendedGlossMasure measure = new ExtendedGlossMasure(null, null, resource);
+        this.setRelatednessMeasure(measure);
+
     }
-    
+
 }

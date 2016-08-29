@@ -11,7 +11,8 @@ package sentenceSimilarity;
  */
 public abstract class OptimalGraphMatchingAlgorithm {
 
-    protected int[] optimalMatch; // optimalMatch[i]= v , where the edge (i,v) is in the optimal matcing 
+    protected double[][] optimalMatching; // optimalMatching[i][j]= weight of the edge between vertices i ,j if
+    // the edge i->j is in the optimal matching , -1 if not
     protected double[][] graph;
     protected double optimalMatchWeight; // the weight of the best matching
     
@@ -22,8 +23,8 @@ public abstract class OptimalGraphMatchingAlgorithm {
     
     public abstract void execute();
 
-    public int[] getOptimalMatch() {
-        return optimalMatch;
+    public double[][]getOptimalMatching() {
+        return optimalMatching;
     }
 
     public double getOptimalMatchWeight() {

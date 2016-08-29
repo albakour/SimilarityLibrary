@@ -5,7 +5,7 @@
  */
 package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
 
@@ -27,7 +27,7 @@ public class LiMeasure extends PathAlgorithm<UnitFunction> {
         this.alpha = alpha;
         this.beta = beta;
         minimum = 0;
-        maximum = Math.tanh(beta * semanticResource.getMaxDepth());
+        maximum = 1;//Math.tanh(beta * semanticResource.getMaxDepth());
         formula = "sim(c1,c2)=exp(-alpha*len(c1,c2))*tanh(beta*depth(lcs))";
 
     }

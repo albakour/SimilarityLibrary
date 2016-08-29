@@ -5,28 +5,29 @@
  */
 package WordSenseDisambiguation;
 
+import PosTagging.PartOfSpeech;
 import ConceptRelatedness.Concept.Concept;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import ConceptRelatedness.GlossMesures.ExtendedGlossMasure;
+import SemanticResource.SemanticResourceHandler;
 import Helper.Helper;
-import partOfSpeechTagger.PostHandler;
-import partOfSpeechTagger.*;
+import PosTagging.PostHandler;
 
 /**
  *
  * @author sobhy
  * @param <T>
  */
-public class SentenceSenseDisambiguator<T extends WordSenseDisambiguationAlgorithm> {
+public class SentenceSenseDisambiguator/*<T extends WordSenseDisambiguationAlgorithm>*/ {
 
     String sentence;
     Word[] sentenceWords;
     int windowSize;
-    T wordSenseDisambiguator;
+    WordSenseDisambiguationAlgorithm wordSenseDisambiguator;
     boolean isDisambiguated;
     PostHandler posTagger;
     SemanticResourceHandler semanticResource;
 
-    public SentenceSenseDisambiguator(String sentence, T wordSenseDisambiguator, SemanticResourceHandler resource, PostHandler tagger) {
+    public SentenceSenseDisambiguator(String sentence, WordSenseDisambiguationAlgorithm wordSenseDisambiguator, SemanticResourceHandler resource, PostHandler tagger) {
         // remove punctuation
         this.sentence = Helper.prepare(sentence);
         this.wordSenseDisambiguator = wordSenseDisambiguator;
@@ -86,7 +87,7 @@ public class SentenceSenseDisambiguator<T extends WordSenseDisambiguationAlgorit
         isDisambiguated = false;
     }
 
-    public void setWordSenseDisambiguator(T disambiguator) {
+    public void setWordSenseDisambiguator(WordSenseDisambiguationAlgorithm disambiguator) {
         this.wordSenseDisambiguator = disambiguator;
         isDisambiguated = false;
     }
@@ -95,21 +96,32 @@ public class SentenceSenseDisambiguator<T extends WordSenseDisambiguationAlgorit
         this.posTagger = tagger;
     }
 
-    public void printDisambiguatedWords() {
+    public String resultToString() {
+        String result="";
         if (!isDisambiguated) {
-            System.out.println("not disambiguated!!");
+           // System.out.println("not disambiguated!!");
+            result+="not disambiguated!!\n";
         }
-        System.out.println("Disambiguating the sentence (" + sentence + "):");
-        System.out.println("");
+        //System.out.println("Disambiguating the sentence (" + sentence + "):");
+        //System.out.println("");
+        result+="Disambiguating the sentence (" + sentence + "):\n________\n";
         for (Word word : sentenceWords) {
-            System.out.println("Disambiguating (" + word.value + "):");
-
             Concept[] senses = word.getDisamiguatedSenses();
-            for (int i = 0; i < senses.length; i++) {
-                System.out.println((i + 1) + "-" + senses[i].getDefinition());
+            if (senses != null) {
+                result+="Disambiguating (" + word.value + ") :  ( "+senses.length+" ) out of ("+word.getPossibleSenses().length+" ) possible senses\n\n";
+                //System.out.println("Disambiguating (" + word.value + ") : which has "+word.getPossibleSenses().length+" possible senses");
+                
+                for (int i = 0; i < senses.length; i++) {
+                    result+=(i + 1) + "-" + senses[i].getDefinition()+"\n";
+                    //System.out.println((i + 1) + "-" + senses[i].getDefinition());
+                   // System.out.println(senses[i].getWordBag(new ExtendedGlossMasure(null, null, semanticResource)));
+                }
+                
             }
-            System.out.println("");
+            result+="\n";
+            //System.out.println("");
         }
+        return result;
     }
 
 }

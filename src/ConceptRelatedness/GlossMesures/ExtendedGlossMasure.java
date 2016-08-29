@@ -5,7 +5,7 @@
  */
 package ConceptRelatedness.GlossMesures;
 
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.ExtendedRelatedConceptsGenerator;
 import ConceptRelatedness.Concept.Concept;
 
@@ -17,7 +17,8 @@ public class ExtendedGlossMasure  extends GlossAlgorithm <ExtendedRelatedConcept
 
     public ExtendedGlossMasure(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
         super(concept1, concept2, resource);
-        this.setRelatedConceptsGenerator(new ExtendedRelatedConceptsGenerator());
+        ExtendedRelatedConceptsGenerator generator= new ExtendedRelatedConceptsGenerator();
+        this.setRelatedConceptsGenerator(generator);
     }
     
 }

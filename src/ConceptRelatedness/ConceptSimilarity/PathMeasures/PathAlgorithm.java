@@ -5,7 +5,7 @@
  */
 package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 import ConceptRelatedness.*;
 import ConceptRelatedness.ConceptSimilarity.SimilarityAlgorithm;
@@ -28,13 +28,25 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
 
     @Override
     public void execute() {
-        if (!this.firstConcept.inTaxonomy || !this.secondConcept.inTaxonomy) {
+        if (this.firstConcept.getPartOfSpeech() != this.secondConcept.getPartOfSpeech()) {
+            relatedness = 0;
+            normalizedRelatedness = 0;
+            explanation = "lcs not found";
+            //defaultExecution();
+            return;
+        }
+        if(this.firstConcept.getPartOfSpeech()!=PosTagging.PartOfSpeech.Type.noun|| this.secondConcept.getPartOfSpeech()!=PosTagging.PartOfSpeech.Type.noun){
             defaultExecution();
             return;
         }
         lcs = semanticResource.getLcs(firstConcept, secondConcept);
         // findLcs() should be called before findShortestPath() bcause the secod uses the first
-
+        if (lcs == null) {
+            relatedness = 0;
+            normalizedRelatedness = 0;
+            explanation = "lcs not found";
+            return;
+        }
         //
         path = semanticResource.getShortestPath(firstConcept, secondConcept, lcs);
 
@@ -59,6 +71,7 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
         explanation += "\nShortest Path Length : " + pathLength;
         explanation += "\nweight function formula: " + weighter.getFormula();
         explanation += "\nFormula : " + formula;
+
     }
 
     @Override
@@ -111,7 +124,7 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
         }
 
         // to weight the edges
-      //  weighter = WeightFunctionFactory.produceObject(this);sd;
+        //  weighter = WeightFunctionFactory.produceObject(this);sd;
         // for variables
         Concept parent, child;
         int len = path.size();

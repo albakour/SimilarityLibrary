@@ -7,8 +7,8 @@ package ConceptRelatedness.Concept;
 
 import ConceptRelatedness.GlossMesures.GlossAlgorithm;
 import java.util.ArrayList;
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
-import partOfSpeechTagger.PartOfSpeech;
+import SemanticResource.SemanticResourceHandler;
+import PosTagging.PartOfSpeech;
 
 /**
  *
@@ -136,5 +136,10 @@ public abstract class Concept<V, S extends SemanticResourceHandler> {
     public void setPartOfSpeech(PartOfSpeech.Type pos) {
         this.partOfSpeech = pos;
     }
+    public PartOfSpeech.Type getPartOfSpeech(){
+        return this.partOfSpeech;
+    }
+    
+    
 
 }

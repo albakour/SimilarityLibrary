@@ -75,23 +75,26 @@ public class Helper {
 
     public static Word[] combineSentences(Word[] sentenceWords1, Word[] sentenceWords2) {
         // temp to store words without repetittions
-        ArrayList<Word> temp = new ArrayList<>();
+        ArrayList<Word> tempWords = new ArrayList<>();
+        ArrayList<String> tempString =new ArrayList<>();
         //adding words from the first sentence
         for (int i = 0; i < sentenceWords1.length; i++) {
-            if (!temp.contains(sentenceWords1[i])) {
-                temp.add(sentenceWords1[i]);
+            if (!tempString.contains(sentenceWords1[i].value)) {
+                tempWords.add(sentenceWords1[i]);
+                tempString.add(sentenceWords1[i].value);
             }
         }
         //adding words from the second sentence
         for (int i = 0; i < sentenceWords2.length; i++) {
-            if (!temp.contains(sentenceWords2[i])) {
-                temp.add(sentenceWords2[i]);
+            if (!tempString.contains(sentenceWords2[i].value)) {
+                tempWords.add(sentenceWords2[i]);
+                tempString.add(sentenceWords2[i].value);
             }
         }
         // forming the result as an array
-        Word[] result = new Word[temp.size()];
-        for (int i = 0; i < temp.size(); i++) {
-            result[i] = temp.get(i);
+        Word[] result = new Word[tempWords.size()];
+        for (int i = 0; i < tempWords.size(); i++) {
+            result[i] = tempWords.get(i);
         }
 
         return result;

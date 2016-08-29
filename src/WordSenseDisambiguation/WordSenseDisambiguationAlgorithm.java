@@ -5,7 +5,8 @@
  */
 package WordSenseDisambiguation;
 
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
+import PosTagging.PostHandler;
 
 /**
  *

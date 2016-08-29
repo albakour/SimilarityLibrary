@@ -6,7 +6,7 @@
 package WordSenseDisambiguation;
 
 
-import ConceptRelatedness.SemanticResource.SemanticResourceHandler;
+import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.GlossMesures.TraditionalGlossMeasure;
 
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ConceptRelatedness.SemanticResource;
+package ConceptRelatedness.Concept;
 
 import ConceptRelatedness.Concept.Concept;
 import edu.smu.tspell.wordnet.*;
@@ -15,7 +15,8 @@ import java.util.Queue;
 import Helper.Helper;
 import edu.smu.tspell.wordnet.AdjectiveSynset;
 import java.util.ArrayList;
-import partOfSpeechTagger.PartOfSpeech;
+import PosTagging.PartOfSpeech;
+import SemanticResource.WordNetHandler;
 
 /**
  *

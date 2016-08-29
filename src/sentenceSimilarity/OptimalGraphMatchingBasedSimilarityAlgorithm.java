@@ -10,6 +10,7 @@ import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import WordSenseDisambiguation.SentenceSenseDisambiguator;
 import WordSenseDisambiguation.Word;
 import WordSenseDisambiguation.WordSenseDisambiguationAlgorithm;
+import Helper.*;
 
 /**
  *
@@ -19,6 +20,7 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
 
     private final OMAlgo matchingAlgorithm;
     private double[][] bipartiteGraph;
+    private double [] optimalWeights;
 
     public OptimalGraphMatchingBasedSimilarityAlgorithm(String sentece1, String sentence2, OMAlgo matchingAlgorithm, SentenceSenseDisambiguator<WSDA> disambiguator, RelatAlgo conceptRelatednessAlgorithm) {
         super(sentece1, sentence2, disambiguator, conceptRelatednessAlgorithm);
@@ -42,17 +44,17 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
         double meanLength = this.sentenceWords1.length + this.sentenceWords2.length;
         int length = 0;
         for (int i = 0; i < sentenceWords1.length; i++) {
-            if (!Helper.Helper.ignore(sentenceWords1[i].value)) {
+            if (!Helper.ignore(sentenceWords1[i].value)) {
                 length++;
             }
         }
         for (int i = 0; i < sentenceWords2.length; i++) {
-            if (!Helper.Helper.ignore(sentenceWords2[i].value)) {
+            if (!Helper.ignore(sentenceWords2[i].value)) {
                 length++;
             }
         }
-        meanLength=length;
-        double result = (2*this.matchingAlgorithm.getOptimalMatchWeight() )/ meanLength;
+        meanLength = length;
+        double result = (2 * this.matchingAlgorithm.getOptimalMatchWeight()) / meanLength;
         return result;
     }
 
@@ -69,6 +71,9 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
             for (int j = 0; j < dim2; j++) {
                 if (sentenceWords1[i].equals(sentenceWords2[j])) {
                     graph[i][j] = 1.0;
+                    if (Helper.ignore(sentenceWords1[i].value) || Helper.ignore(sentenceWords2[j].value)) {
+                        graph[i][j] = 0;
+                    }
                 } else {
                     graph[i][j] = wordWordSimilarity(sentenceWords1[i], sentenceWords2[j]);
                 }
@@ -105,6 +110,37 @@ public class OptimalGraphMatchingBasedSimilarityAlgorithm<OMAlgo extends Optimal
             }
         }
         return max;
+    }
+
+    public String[][] getMatchedWords() {
+
+        int min = Math.min(sentenceWords1.length, sentenceWords2.length);
+        String[][] result = new String[min][2];
+        optimalWeights=new double[min];
+        double[][] optimalMatching=this.matchingAlgorithm.getOptimalMatching();
+        int count=0;
+        for(int i=0;i<optimalMatching.length;i++){
+            for(int j=0;j<optimalMatching[i].length;j++){
+                if(optimalMatching[i][j]!=-1){
+                    result[count][0]=sentenceWords1[i].value;
+                    result[count][1]=sentenceWords2[j].value;
+                    optimalWeights[count]=optimalMatching[i][j];
+                    count++;
+                }
+            }
+        }
+        return result;
+
+    }
+
+    public String getMatching() {
+        String result = "";
+        String[][] matchedWords = getMatchedWords();
+        for (int i = 0; i < matchedWords.length; i++) {
+            result+= matchedWords[i][0]+"    ->    "+matchedWords[i][1]+ "      "+optimalWeights[i]+"\n";
+        }
+        return result;
+
     }
 
 }

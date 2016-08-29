@@ -1,0 +1,325 @@
+(1)
+Cord is strong thick string
+a smile is the expression that you have on your face when youare pleased or amused  or when you are being friendly
+0.04
+________________________________________________
+(2)
+a rooster is an adult male chicken
+a voyage is a long journey on a ship or in a spacecraft
+0.02
+________________________________________________
+(3)
+Noon is 12 clock in the middle of the day
+String is thin rope made of twisted threads used for tying things together or tying up parcels
+0.05
+________________________________________________
+(4)
+Fruit or a fruit is something which grows on a tree or bush and which contains seeds or a stone covered by a substance that you can eat
+a furnace is a container or enclosed space in which a very hot fire is made for example to melt metal burn rubbish or produce steam
+0.19
+________________________________________________
+(5)
+an autograph is the signature of someone famous which is specially written for a fan to keep
+the shores or shore of a sea lake or wide river is the land along the edge of it
+0.02
+________________________________________________
+(6)
+an automobile is a car
+in legends and fairy stories a wizard is a man who has magic powers
+0.08
+________________________________________________
+(7)
+a mound of something is a large rounded pile of it
+a stove is a piece of equipment which provides heat either for cooking or for heating a room 
+0.02
+________________________________________________
+(8)
+a grin is a broad smile
+an implement is a tool or other piece of equipment 
+0.02
+________________________________________________
+(9)
+an Asylum is a psychiatric hospital 
+Fruit or a fruit is something which grows on a tree or bush and which contains seeds or a stone covered by a substance that you can eat
+0.02
+________________________________________________
+(10)
+an Asylum is a psychiatric hospital
+a monk is a member of a male religious community that is usually separated from the outside world
+0.15
+________________________________________________
+(11)
+a graveyard is an area of land sometimes near a church where dead people are buried
+if you describe a place or situation as a madhouse you mean that it is full of confusion and noise
+0.09
+________________________________________________
+(12)
+glass is a hard transparent substance that is used to make things such as windows and bottles
+a magician is a person who entertains people by doing magic tricks
+0.03
+________________________________________________
+(13)
+a boy is a child who will grow up to be a man
+a rooster is an adult male chicken
+0.43
+________________________________________________
+(14)
+a cushion is a fabric case filled with soft material which you put on a seat to make it more comfortable
+a jewel is a precious stone used to decorate valuable things that you wear such as rings or necklaces
+0.21 
+________________________________________________
+(15)
+a monk is a member of a male religious community that is usually separated from the outside world
+a slave is someone who is the property of another person and has to work for that person 
+0.18
+________________________________________________
+(16)
+an Asylum is a psychiatric hospital
+a cemetery is a place where dead people bodies or their ashes are buried
+0.15
+_________________________________________________
+(17)
+the coast is an area of land that is next to the sea
+a forest is a large area where trees grow close together
+0.19
+_________________________________________________
+(18)
+a grin is a broad smile
+a lad is a young man or boy
+0.05
+_________________________________________________
+(19)
+the shores or shore of a sea lake or wide river is the land along the edge of it
+woodland is land with a lot of trees 
+0.33
+_________________________________________________
+(20)
+a monk is a member of a male religious community that is usually separated from the outside world
+in ancient times an oracle was a priest or priestess who made statements about future events or about the truth
+0.45
+_________________________________________________
+(21)
+a boy is a child who will grow up to be a man
+a sage is a person who is regarded as being very wise 
+0.17
+_________________________________________________
+(22)
+an automobile is a car
+a cushion is a fabric case filled with soft material which you put on a seat to make it more comfortable
+0.08
+_________________________________________________
+(23)
+a mound of something is a large rounded pile of it
+the shores or shore of a sea lake or wide river is the land along the edge of it 
+0.14
+_________________________________________________
+(24)
+a lad is a young man or boy
+in legends and fairy stories a wizard is a man who has magic powers
+0.13
+_________________________________________________
+(25)
+a forest is a large area where trees grow close together
+a graveyard is an area of land sometimes near a church where dead people are buried
+0.26
+_________________________________________________
+(26)
+food is what people and animals eat
+a rooster is an adult male chicken
+0.22
+_________________________________________________
+(27)
+a cemetery is a place where dead people bodies or their ashes are buried
+woodland is land with a lot of trees
+0.15
+_________________________________________________
+(28)
+the shores or shore of a sea, lake or wide river is the land along the edge of it
+a voyage is a long journey on a ship or in a spacecraft
+0.08
+_________________________________________________
+(29)
+a bird is a creature with feathers and wings females lay eggs and most birds can fly
+woodland is land with a lot of trees 
+0.05
+_________________________________________________
+(30)
+the coast is an area of land that is next to the sea
+a hill is an area of land that is higher than the land that surrounds it
+0.4
+_________________________________________________
+(31)
+a furnace is a container or enclosed space in which a very hot fire is made for example to melt metal burn rubbish or produce steam
+an implement is a tool or other piece of equipment
+0.2
+_________________________________________________
+(32)
+a crane is a large machine that moves heavy things by lifting them in the air
+a rooster is an adult male chicken
+0.08
+_________________________________________________
+(33)
+a hill is an area of land that is higher than the land that surrounds it
+woodland is land with a lot of trees
+0.58 
+__________________________________________________
+(34)
+a car is a motor vehicle with room for a small number of passengers
+When you make a journey you travel from one place to another
+0.29
+___________________________________________________
+(35)
+a cemetery is a place where dead people bodies or their ashes are buried
+a mound of something is a large rounded pile of it
+0.23
+____________________________________________________
+(36)
+glass is a hard transparent substance that is used to make things such as windows and bottles
+a jewel is a precious stone used to decorate valuable things that you wear such as rings or necklaces 
+0.43
+____________________________________________________
+(37)
+a magician is a person who entertains people by doing magic tricks
+in ancient times an oracle was a priest or priestess who made statements about future events or about the truth 
+0.52
+____________________________________________________
+(38)
+a crane is a large machine that moves heavy things by lifting them in the air
+an implement is a tool or other piece of equipment 
+0.74
+____________________________________________________
+(39)
+your brother is a boy or a man who has the same parents as you
+a lad is a young man or boy
+0.51
+____________________________________________________
+(40)
+a sage is a person who is regarded as being very wise
+in legends and fairy stories a wizard is a man who has magic powers
+0.61
+____________________________________________________
+(41)
+in ancient times an oracle was a priest or priestess who made statements about future events or about the truth
+a sage is a person who is regarded as being very wise
+1.13
+____________________________________________________
+(42)
+a bird is a creature with feathers and wings females lay eggs and most birds can fly
+a crane is a large machine that moves heavy things by lifting them in the air 
+0.14
+_____________________________________________________
+(43)
+a bird is a creature with feathers and wings females lay eggs and most birds can fly
+a cock is an adult male chicken
+0.65
+_____________________________________________________
+(44)
+food is what people and animals eat
+fruit or a fruit is something which grows on a tree or bush and which contains seeds or a stone covered by a substance that you can eat
+0.97
+_____________________________________________________
+(45)
+your brother is a boy or a man who has the same parents as you
+a monk is a member of a male religious community that is usually separated from the outside world
+0.18
+_____________________________________________________
+(46)
+an Asylum is a psychiatric hospital
+if you describe a place or situation as a madhouse you mean that it is full of confusion and noise 
+0.86 
+_____________________________________________________
+(47)
+a furnace is a container or enclosed space in which a very hot fire is made for example to melt metal burn rubbish or produce steam
+a stove is a piece of equipment which provides heat either for cooking or for heating a room 
+1.39
+_____________________________________________________
+(48)
+a magician is a person who entertains people by doing magic tricks
+In legends and fairy stories a wizard is a man who has magic powers 
+1.42
+_____________________________________________________
+(49)
+a hill is an area of land that is higher than the land that surrounds it
+a mound of something is a large rounded pile of it 
+1.17
+_____________________________________________________
+(50)
+cord is strong thick string
+string is thin rope made of twisted threads used for tying things together or tying up parcels 
+1.88
+_____________________________________________________
+(51)
+glass is a hard transparent substance that is used to make things such as windows and bottles
+a tumbler is a drinking glass with straight sides
+0.55 
+_____________________________________________________
+(52)
+a grin is a broad smile
+a smile is the expression that you have on your face when you are pleased or amused or when you are being friendly 
+1.94
+_____________________________________________________
+(53)
+in former times serfs were a class of people who had to work on a particular person land and could not leave without that person permission
+a slave is someone who is the property of another person and has to work for that person 
+1.93
+_____________________________________________________
+(54)
+a When you make a journey you travel from one place to another
+a voyage is a long journey on a ship or in a spacecraft 
+1.44
+_____________________________________________________
+(55)
+an autograph is the signature of someone famous which is specially written for a fan to keep
+your signature is your name written in your own characteristic way often at the end of a document to indicate that you wrote the document or that you agree with what it says
+1.62
+_____________________________________________________
+(56)
+the coast is an area of land that is next to the sea
+the shores or shore of a sea lake or wide river is the land along the edge of it
+2.35
+_____________________________________________________
+(57)
+a forest is a large area where trees grow close together
+woodland is land with a lot of trees 
+2.51
+_____________________________________________________
+(58)
+an implement is a tool or other piece of equipment
+a tool is any instrument or simple piece of equipment that you hold in your hands and use to do a particular kind of work
+2.36
+_____________________________________________________
+(59)
+a cock is an adult male chicken
+a rooster is an adult male chicken 
+3.45
+_____________________________________________________
+(60)
+a boy is a child who will grow up to be a man
+a lad is a young man or boy 
+2.32
+_____________________________________________________
+(61)
+a cushion is a fabric case filled with soft material which you put on a seat to make it more comfortable
+a pillow is a rectangular cushion which you rest your head on when you are in bed 
+2.09
+_____________________________________________________
+(62)
+a cemetery is a place where dead people bodies or their ashes are buried
+a graveyard is an area of land sometimes near a church where dead people are buried
+3.09
+_____________________________________________________
+(63)
+an automobile is a car
+a car is a motor vehicle with room for a small number of passengers
+2.23
+_____________________________________________________
+(64)
+midday is 12 clock in the middle of the day
+noon is 12 clock in the middle of the day
+3.82 
+_____________________________________________________
+(65)
+a gem is a jewel or stone that is used in jewellery
+a jewel is a precious stone used to decorate valuable things that you wear such as rings or necklaces 
+2.61
+_____________________________________________________          

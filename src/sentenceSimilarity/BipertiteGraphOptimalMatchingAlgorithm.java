@@ -16,6 +16,8 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
     private final double epsilon = 1e-9; // epsilon to use when equality conditions on double values 
     private int matchSize; // the number of edges in the optimal matching 
     private UnWeightedBipertiteGraph bipertiteHandler; // object to handler the unweighted bipertite graph needed algorithms
+    private double[][] balancedgraph;
+    private double[] optimalMatchingWeights;
 
     public BipertiteGraphOptimalMatchingAlgorithm(double[][] graph) {
         super(graph);
@@ -26,6 +28,7 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
         tempGraph = this.graph;
         // if the graph has different dimensions , balance them
         balanceTempGraph();
+        balancedgraph = tempGraph;
         //  modify the graph to fit the a minimum problem 
         tempGraph = convertToMinimumProblem();
         initZeroGraph();
@@ -37,7 +40,7 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
             bipertiteHandler.execute();
             this.matchSize = bipertiteHandler.getCardinality();
             if (reachPerfectMatch()) {
-                this.optimalMatch = bipertiteHandler.getleftMatches();
+                fillOptimalMatching();
                 break;
             }
             // modify the weights to enable more iteration to reach to a perfect matching
@@ -53,7 +56,6 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
      *
      * @return
      */
-
     public double[][] convertToMinimumProblem() {
         double max = -1;
         double[][] result = new double[tempGraph.length][tempGraph.length];
@@ -116,7 +118,6 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
      * subtracting the weight of the minimum weighted edge of the vertex from
      * all the weights of the vertex edges
      */
-
     private void initTempGraph() {
         // subtract min value of each row from all the values of the row
         for (int i = 0; i < tempGraph.length; i++) {
@@ -166,9 +167,11 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
             }
         }
     }
+
     /**
      * is the current matching include all vertices
-     * @return 
+     *
+     * @return
      */
     private boolean reachPerfectMatch() {
         if (matchSize == tempGraph.length) {
@@ -176,12 +179,14 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
         }
         return false;
     }
+
     /**
-     * update the weights to 
-     * increase the weight of the edges which are between vertices from the min vertex cover 
-     * decrease the weight of the edges that has just one vertex in the min vertex cover 
+     * update the weights to increase the weight of the edges which are between
+     * vertices from the min vertex cover decrease the weight of the edges that
+     * has just one vertex in the min vertex cover
+     *
      * @param leftCover
-     * @param rightCover 
+     * @param rightCover
      */
     private void adjustWeights(boolean[] leftCover, boolean[] rightCover) {
         double delta = Double.MAX_VALUE;
@@ -211,19 +216,42 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
         }
 
     }
+
     /**
      * calculate the weight of the best matching found
-     * @return 
+     *
+     * @return
      */
-
     private double calculateWeight() {
         double result = 0;
-        for (int i = 0; i < this.graph.length; i++) {
-            if (optimalMatch[i] != -1) {
-                result += this.graph[i][optimalMatch[i]];
+        for (int i = 0; i < this.optimalMatching.length; i++) {
+            for (int j = 0; j < this.optimalMatching[i].length; j++) {
+                if(optimalMatching[i][j]!=-1){
+                    result+=optimalMatching[i][j];
+                }
             }
         }
         return result;
+    }
+
+    private void fillOptimalMatching() {
+        int dim1, dim2;
+        dim1 = this.graph.length;
+        dim2 = this.graph[0].length;
+        this.optimalMatching = new double[dim1][dim2];
+        boolean[][] boolmatching = bipertiteHandler.getOptimalMatching();
+        int min1, min2;
+        min1 = Math.min(dim1, boolmatching.length);
+        min2 = Math.min(dim2, boolmatching.length);
+        for (int i = 0; i < min1; i++) {
+            for (int j = 0; j < min2; j++) {
+                if (boolmatching[i][j]) {
+                    optimalMatching[i][j] = graph[i][j];
+                } else {
+                    optimalMatching[i][j] = -1;
+                }
+            }
+        }
     }
 
 }
