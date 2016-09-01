@@ -12,7 +12,7 @@ import ConceptRelatedness.Concept.Concept;
  * @author sobhy
  */
 public class ConceptNode {
-
+    // the value 
     Concept concept;
     ConceptNode child;
     ConceptNode parent;

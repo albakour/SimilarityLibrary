@@ -13,11 +13,7 @@ import ConceptRelatedness.Concept.Concept;
  *
  * @author sobhy
  */
-public class UnitFunction extends WeightFunction {
-    
-    public UnitFunction(SemanticResourceHandler resource){
-        super(resource);
-    }
+public class UnitFunction implements WeightFunction {
     
     @Override
     public double function(Concept parent, Concept child){

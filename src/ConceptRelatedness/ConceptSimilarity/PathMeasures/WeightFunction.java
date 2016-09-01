@@ -8,19 +8,23 @@ package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
-
 /**
  *
  * @author sobhy
  */
-public abstract class  WeightFunction {
-    public SemanticResourceHandler semanticResource;
+public interface WeightFunction {
 
-    public WeightFunction(SemanticResourceHandler resource) {
-        this.semanticResource =resource;
-    }
-    
-    public abstract double function (Concept parent, Concept child);
+    /**
+     * edge weighter
+     *
+     * @param parent the parent concept
+     * @param child the child concept
+     * @return the value of the weight of the edge between the parent and the
+     * child
+     */
+
+    public abstract double function(Concept parent, Concept child);
+
     public abstract String getFormula();
-    
+
 }

@@ -21,7 +21,7 @@ public class BottomUpFindLcsAlgorithm implements  FindLCSAlgorithm {
      *
      * @param concept1
      * @param concept2
-     * @return
+     * @return the lowest common subsumer of the two concepts
      */
     @Override
     public Concept getLcs(Concept concept1,Concept concept2){

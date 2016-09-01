@@ -13,13 +13,19 @@ import PosTagging.PostHandler;
  *
  * @author sobhy
  */
-public class ExtendedLeskAlgorithm extends MaximizeRelatednessWSDAlgorithm<ExtendedGlossMasure> {
+public class ExtendedLeskAlgorithm extends MaximizeRelatednessWSDAlgorithm {
 
-    public ExtendedLeskAlgorithm(Word[] sentenceWords, Word target, SemanticResourceHandler resource) {
-        super(sentenceWords, target, resource);
-        ExtendedGlossMasure measure = new ExtendedGlossMasure(null, null, resource);
+    public ExtendedLeskAlgorithm(Word[] sentenceWords, Word target) {
+        super(sentenceWords, target);
+        ExtendedGlossMasure measure = new ExtendedGlossMasure();
         this.setRelatednessMeasure(measure);
 
+    }
+
+    public ExtendedLeskAlgorithm() {
+        super();
+        ExtendedGlossMasure measure = new ExtendedGlossMasure();
+        this.setRelatednessMeasure(measure);
     }
 
 }

@@ -13,12 +13,18 @@ import ConceptRelatedness.Concept.TraditionalRelatedConceptsGenerator;
  *
  * @author sobhy
  */
-public class TraditionalGlossMeasure  extends GlossAlgorithm<TraditionalRelatedConceptsGenerator> {
+public class TraditionalGlossMeasure extends GlossAlgorithm<TraditionalRelatedConceptsGenerator> {
 
     public TraditionalGlossMeasure(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
-        TraditionalRelatedConceptsGenerator generator=new TraditionalRelatedConceptsGenerator();
+        super(concept1, concept2);
+        TraditionalRelatedConceptsGenerator generator = new TraditionalRelatedConceptsGenerator();
         this.setRelatedConceptsGenerator(generator);
     }
-    
+
+    public TraditionalGlossMeasure() {
+        super();
+        TraditionalRelatedConceptsGenerator generator = new TraditionalRelatedConceptsGenerator();
+        this.setRelatedConceptsGenerator(generator);
+    }
+
 }

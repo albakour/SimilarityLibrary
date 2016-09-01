@@ -5,10 +5,8 @@
  */
 package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 
-
 import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
-
 
 /**
  *
@@ -16,9 +14,17 @@ import ConceptRelatedness.Concept.Concept;
  */
 public class LeakcockChodorowMeasure extends PathAlgorithm<UnitFunction> {
 
-    public LeakcockChodorowMeasure(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
-        this.weighter=new UnitFunction(resource);
+    public LeakcockChodorowMeasure(Concept concept1, Concept concept2) {
+        super(concept1, concept2);
+        this.weighter = new UnitFunction();
+        maximum = Math.log(2 * semanticResource.getMaxDepth() + 1);
+        minimum = 0;
+        formula = "sim(c1,c2)=-log((len(c1,c2)+1)/(2 max_depth+1))";
+    }
+
+    public LeakcockChodorowMeasure() {
+        super();
+        this.weighter = new UnitFunction();
         maximum = Math.log(2 * semanticResource.getMaxDepth() + 1);
         minimum = 0;
         formula = "sim(c1,c2)=-log((len(c1,c2)+1)/(2 max_depth+1))";

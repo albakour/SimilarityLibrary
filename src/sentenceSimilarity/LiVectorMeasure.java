@@ -21,20 +21,20 @@ import PosTagging.PostHandler;
  * @param <RelatAlgo>
  * @param <POST>
  */
-public class LiVectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, RelatAlgo extends ConceptsRelatednessAlgorithm> extends VectorBasedSentenceSimilarityAlgorithm<WSDA, RelatAlgo> {
+public class LiVectorMeasure extends VectorBasedSentenceSimilarityAlgorithm {
 
     // the combine result
     private Word[] combinedSentence;
     // is final because it would be assigned only once
     private boolean isCombined;
     private final InformationContentCalculator informationContentCalculator;
-    private double threshold;
+    private double threshold; // over which the similarity value is concsidered
     // internal member to contact between functions
     // used as global variable useful for code organization 
     //
     private Concept matchedSense;
 
-    public LiVectorBasedSentenceSimilarityAlgorithm(String sentence1, String sentence2, SentenceSenseDisambiguator<WSDA> disambiguator, RelatAlgo relatednessAlgorithm ) {
+    public LiVectorMeasure(String sentence1, String sentence2, SentenceSenseDisambiguator disambiguator, ConceptsRelatednessAlgorithm relatednessAlgorithm) {
 
         super(sentence1, sentence2, disambiguator, relatednessAlgorithm);
         isCombined = false;

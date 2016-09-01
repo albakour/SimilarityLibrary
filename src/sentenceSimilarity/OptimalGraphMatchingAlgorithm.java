@@ -20,9 +20,14 @@ public abstract class OptimalGraphMatchingAlgorithm {
     public OptimalGraphMatchingAlgorithm(double[][] graph){
         this.graph=graph;
     }
-    
+    /**
+     * execute the algorithm
+     */
     public abstract void execute();
-
+/**
+ * 
+ * @return two dimension array representing the optimal matching 
+ */
     public double[][]getOptimalMatching() {
         return optimalMatching;
     }

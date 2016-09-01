@@ -31,9 +31,8 @@ public class StanfordPostHandler extends PostHandler<MaxentTagger> {
 
     /**
      *
-     * @param sentence
      * @param taggedSentence
-     * @return
+     * @return 
      */
     @Override
     public PartOfSpeech.Type[] getPosTypes(String taggedSentence) {

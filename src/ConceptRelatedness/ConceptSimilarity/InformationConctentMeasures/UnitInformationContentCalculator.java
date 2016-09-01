@@ -12,15 +12,21 @@ import SemanticResource.SemanticResourceHandler;
  *
  * @author sobhy
  */
-public class UnitInformationContentCalculator extends InformationContentCalculator{
+public class UnitInformationContentCalculator extends InformationContentCalculator {
 
     public UnitInformationContentCalculator(SemanticResourceHandler resource) {
         super(resource);
     }
 
     @Override
+    /**
+     * calculate information content value
+     *
+     * @param concept purpose concept
+     * @return information content value
+     */
     public double calculateIC(Concept concept) {
         return 1.0;
     }
-    
+
 }

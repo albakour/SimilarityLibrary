@@ -8,7 +8,6 @@ package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
-
 /**
  *
  * @author sobhy
@@ -21,15 +20,25 @@ public class LiMeasure extends PathAlgorithm<UnitFunction> {
     //        alpha = 0.2;
     //        beta = 0.6;
 
-    public LiMeasure(double alpha, double beta, Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
-        this.weighter=new UnitFunction(resource);
+    public LiMeasure(double alpha, double beta, Concept concept1, Concept concept2) {
+        super(concept1, concept2);
+        this.weighter = new UnitFunction();
         this.alpha = alpha;
         this.beta = beta;
         minimum = 0;
         maximum = 1;//Math.tanh(beta * semanticResource.getMaxDepth());
         formula = "sim(c1,c2)=exp(-alpha*len(c1,c2))*tanh(beta*depth(lcs))";
 
+    }
+
+    public LiMeasure(double alpha, double beta) {
+        super();
+        this.weighter = new UnitFunction();
+        this.alpha = alpha;
+        this.beta = beta;
+        minimum = 0;
+        maximum = 1;//Math.tanh(beta * semanticResource.getMaxDepth());
+        formula = "sim(c1,c2)=exp(-alpha*len(c1,c2))*tanh(beta*depth(lcs))";
     }
 
     @Override

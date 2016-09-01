@@ -17,38 +17,37 @@ import PosTagging.PostHandler;
  * @author sobhy
  * @param <T>
  */
-public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatednessAlgorithm> extends WordSenseDisambiguationAlgorithm {
+public class MaximizeRelatednessWSDAlgorithm extends WordSenseDisambiguationAlgorithm {
 
-    T relatednessMeasure;
+    ConceptsRelatednessAlgorithm relatednessMeasure;
     int firstWindowIndex;
     int lastWindowIndex;
     int targetWordIndex;
 
-    public MaximizeRelatednessWSDAlgorithm(Word[] sentenceWords, Word target, SemanticResourceHandler resource) {
-        super(sentenceWords, target, resource);
-        //this.relatednessMeasure = ConceptsRelatednessAlgorithmFactory.produceObject(this);
-        
+    public MaximizeRelatednessWSDAlgorithm(Word[] sentenceWords, Word target) {
+        super(sentenceWords, target);
+
     }
 
+    public MaximizeRelatednessWSDAlgorithm() {
+        super();
+    }
+
+    /**
+     * execute the algorithm
+     */
     @Override
     public void execute() {
         setTargetWordIndex();
-        if(targetWordIndex==-1){
+        if (targetWordIndex == -1) {
             return;
         }
-        if(targetWord.partOfSpeech== PartOfSpeech.Type.other){
+        if (targetWord.partOfSpeech == PartOfSpeech.Type.other) {
             return;
         }
         setWindowIndexes();
         Concept[] possibleSenses = targetWord.getPossibleSenses();
-        //to remove
-//        if(targetWord.value.equals("hearts")){
-//
-//            for(Concept sen: possibleSenses){
-//                System.out.println(sen.getDefinition());
-//            }
-//        }
-        
+
         int len = possibleSenses.length;
         double scores[] = new double[len];
         double maxScore = -1;
@@ -71,10 +70,15 @@ public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatedn
 
     }
 
+    /**
+     *
+     * @param sense
+     * @return the score of the sentence
+     */
     private double getSenseScore(Concept sense) {
         double score = 0;
-        for (int i=firstWindowIndex;i<=lastWindowIndex;i++) {
-            if (i!=targetWordIndex) {
+        for (int i = firstWindowIndex; i <= lastWindowIndex; i++) {
+            if (i != targetWordIndex) {
                 if (sentenceWords[i].isDisambiguated) {
                     score += getMaxRelatedness(sense, sentenceWords[i].getDisamiguatedSenses());
                 } else {
@@ -85,6 +89,12 @@ public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatedn
         return score;
     }
 
+    /**
+     *
+     * @param targetSense
+     * @param senses
+     * @return the maximum relatedness between
+     */
     private double getMaxRelatedness(Concept targetSense, Concept[] senses) {
         double max = -1;
         relatednessMeasure.setFirstConcept(targetSense);
@@ -100,33 +110,36 @@ public abstract class MaximizeRelatednessWSDAlgorithm<T extends ConceptsRelatedn
         return max;
     }
 
+    /**
+     * set were widow begins and ends
+     */
     private void setWindowIndexes() {
-        if(windowSize>=sentenceWords.length)
-        {
-           firstWindowIndex=0;
-           lastWindowIndex=sentenceWords.length-1;
-           return;
+        if (windowSize >= sentenceWords.length) {
+            firstWindowIndex = 0;
+            lastWindowIndex = sentenceWords.length - 1;
+            return;
         }
-        firstWindowIndex=Math.max(0, targetWordIndex-windowSize/2);
-        lastWindowIndex=Math.min(sentenceWords.length-1, firstWindowIndex+windowSize-1);
-        if(lastWindowIndex==sentenceWords.length-1){
-            firstWindowIndex=Math.max(sentenceWords.length-windowSize, 0);
+        firstWindowIndex = Math.max(0, targetWordIndex - windowSize / 2);
+        lastWindowIndex = Math.min(sentenceWords.length - 1, firstWindowIndex + windowSize - 1);
+        if (lastWindowIndex == sentenceWords.length - 1) {
+            firstWindowIndex = Math.max(sentenceWords.length - windowSize, 0);
         }
-        
+
     }
-    private void setTargetWordIndex(){
-        for(int i=0;i<sentenceWords.length;i++){
-            if(targetWord.equals(sentenceWords[i])){
-                targetWordIndex=i;
+
+    private void setTargetWordIndex() {
+        for (int i = 0; i < sentenceWords.length; i++) {
+            if (targetWord.equals(sentenceWords[i])) {
+                targetWordIndex = i;
                 return;
             }
         }
-        targetWordIndex=-1;
-        
-    }
-    public void setRelatednessMeasure(T algorithm){
-        this.relatednessMeasure=algorithm;
+        targetWordIndex = -1;
+
     }
 
+    public void setRelatednessMeasure(ConceptsRelatednessAlgorithm algorithm) {
+        this.relatednessMeasure = algorithm;
+    }
 
 }

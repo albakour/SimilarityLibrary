@@ -14,10 +14,18 @@ import java.util.ArrayList;
  */
 public class ExtendedRelatedConceptsGenerator implements RelatedConceptsGenerator {
 
+    /**
+     * 
+     * @param concept 
+     * @return the related concepts of the concept
+     */
     @Override
     public ArrayList<Concept> generate(Concept concept) {
         ArrayList<Concept> result = new ArrayList<>();
         result.add(concept);
+        
+        // noun case
+        
         if (concept.partOfSpeech == PartOfSpeech.Type.noun) {
             Concept[] containing = concept.getContainingConcepts();
             Concept[] parts = concept.getPartsConcepts();
@@ -35,6 +43,9 @@ public class ExtendedRelatedConceptsGenerator implements RelatedConceptsGenerato
             for (Concept cncpt : children) {
                 result.add(cncpt);
             }
+            
+            // verb case
+            
         } else if (concept.partOfSpeech == PartOfSpeech.Type.verb) {
             Concept[] group = concept.getGroupConcepts();
             Concept[] parents = concept.getDirectAncestors();
@@ -48,8 +59,10 @@ public class ExtendedRelatedConceptsGenerator implements RelatedConceptsGenerato
             for (Concept cncpt : children) {
                 result.add(cncpt);
             }
+            
+            // adjective adverb cases
 
-        } else if (concept.partOfSpeech == PartOfSpeech.Type.adjective ||concept.partOfSpeech == PartOfSpeech.Type.adverb) {
+        } else if (concept.partOfSpeech == PartOfSpeech.Type.adjective || concept.partOfSpeech == PartOfSpeech.Type.adverb) {
             Concept[] group = concept.getGroupConcepts();
             Concept[] similars = concept.getSimilarConcepts();
             for (Concept cncpt : group) {

@@ -11,15 +11,18 @@ import java.util.ArrayList;
  *
  * @author sobhy
  */
-public class TraditionalRelatedConceptsGenerator implements RelatedConceptsGenerator{
-    // 
-    
-    //this function donot
+public class TraditionalRelatedConceptsGenerator implements RelatedConceptsGenerator {
+
+    /**
+     *
+     * @param concept
+     * @return the related concepts of the concept
+     */
     @Override
-    public ArrayList<Concept> generate(Concept concept){
-        ArrayList<Concept> result=new ArrayList<>();
+    public ArrayList<Concept> generate(Concept concept) {
+        ArrayList<Concept> result = new ArrayList<>();
         result.add(concept);
         return result;
     }
-    
+
 }

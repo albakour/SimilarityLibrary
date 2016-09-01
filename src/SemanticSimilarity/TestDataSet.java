@@ -5,19 +5,13 @@
  */
 package SemanticSimilarity;
 
-import PosTagging.StanfordPostHandler;
-import PosTagging.PartOfSpeech;
-import SemanticResource.SemanticResourceHandlerFactory;
 import WordSenseDisambiguation.*;
 import ConceptRelatedness.*;
-import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.*;
-import SemanticResource.SemanticResourceHandler;
-import ConceptRelatedness.GlossMesures.*;
-import Helper.StatisticsHelper;
 
-import ConceptRelatedness.ConceptSimilarity.PathMeasures.*;
+import Helper.StatisticsHelper;
+import SemanticResource.SemanticResourceHandler;
 import sentenceSimilarity.*;
-import ConceptRelatedness.Concept.*;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -48,7 +42,7 @@ public class TestDataSet {
         String result = "";
         readDataSet();
         double delta = 0.15;
-        ExtendedLeskAlgorithm leskE = new ExtendedLeskAlgorithm(null, null, semanticResource);
+        ExtendedLeskAlgorithm leskE = new ExtendedLeskAlgorithm();
         leskE.setWindowSize(10);
         SentenceSenseDisambiguator sentenceDisambiguator = new SentenceSenseDisambiguator("", leskE, semanticResource, tagger);
         double[] vecArray = new double[actaulValues.length];
@@ -58,7 +52,7 @@ public class TestDataSet {
         double threshold = 0.4;
         double step = 0.1;
         int count = 0;
-        while (threshold <= 0.6) {
+        while (threshold <= 0.4) {
             threshold += step;
             count++;
             result += "_______________________________\r\n";
@@ -87,19 +81,19 @@ public class TestDataSet {
                 result += "+++++++++++++++++++++++++++\r\n";
                 result += "measure for verbs : " + defaultMeasureTypes[i] + "\r\n";
                 result += "+++++++++++++++++++++++++++\r\n";
-                DefaultConceptRelatednessMeasureFactory.produceObject(defaultMeasureTypes[i], semanticResource);
+                DefaultConceptRelatednessMeasureFactory.setType(defaultMeasureTypes[i]);
                 for (int j = 0; j < measures.length; j++) {
                     result += "##########################\r\n";
                     result += measures[j].getClass() + "\r\n";
                     result += "##########################\r\n";
                     for (int k = 0; k < firstSentences.length; k++) {
                         System.out.println(count + " " + i + " " + j + " " + k);
-                        LiVectorBasedSentenceSimilarityAlgorithm vecAlgo = new LiVectorBasedSentenceSimilarityAlgorithm(firstSentences[k], secondSentences[k], sentenceDisambiguator, measures[j]);
+                        LiVectorMeasure vecAlgo = new LiVectorMeasure(firstSentences[k], secondSentences[k], sentenceDisambiguator, measures[j]);
                         vecAlgo.execute();
                         WordOrderAlgorithm wordOrderAlgo = new WordOrderAlgorithm(firstSentences[k], secondSentences[k], sentenceDisambiguator, measures[j]);
                         wordOrderAlgo.execute();
                         BipertiteGraphOptimalMatchingAlgorithm omAlgo = new BipertiteGraphOptimalMatchingAlgorithm(null);
-                        OptimalGraphMatchingBasedSimilarityAlgorithm omSimAlgo = new OptimalGraphMatchingBasedSimilarityAlgorithm(firstSentences[k], secondSentences[k], omAlgo, sentenceDisambiguator, measures[j]);
+                        OptimalGraphMatchingBasedSimilarityAlgorithm omSimAlgo = new MouhibiMatchingMeasure(firstSentences[k], secondSentences[k], null, omAlgo, sentenceDisambiguator, measures[j]);
                         omSimAlgo.execute();
                         vecArray[k] = vecAlgo.getSimilarity();
                         vecOrderArray[k] = (1 - delta) * vecAlgo.getSimilarity() + delta * wordOrderAlgo.getSimilarity();

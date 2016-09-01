@@ -5,28 +5,25 @@
  */
 package SemanticResource;
 
-
 /**
  *
  * @author sobhy
  */
 public class SemanticResourceHandlerFactory {
 
-    /**
-     *
-     * @param type
-     * @param lcsAlgorithmName
-     * @param sourcePath
-     * @return
-     */
-    public static SemanticResourceHandler produceObject(String type,String lcsAlgorithmName,String sourcePath) {
+    private static SemanticResourceHandler currentObject;
+
+    public static SemanticResourceHandler setConfiguration(String type, String lcsAlgorithmName, String sourcePath) {
         if (type.equals("wordnet")) {
             WordNetHandler.setDictionaryPath(sourcePath);
             WordNetHandler.setFindLcsAlgorithm(lcsAlgorithmName);
-            return WordNetHandler.getInstance();
+            currentObject = WordNetHandler.getInstance();
+            return currentObject;
         }
         return null;
     }
-    
+    public static SemanticResourceHandler produceObject(){
+        return currentObject;
+    }
 
 }

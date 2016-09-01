@@ -22,26 +22,29 @@ public abstract class GlossAlgorithm<T extends RelatedConceptsGenerator> extends
     protected ArrayList<String> wordsBag2;
     protected T relatedConceptsGenerator;
 
+    public GlossAlgorithm(Concept concept1, Concept concept2) {
+        super(concept1, concept2);
+    }
 
-    public GlossAlgorithm(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
+    public GlossAlgorithm() {
+        super();
     }
 
     /**
-     *
+     * execute the algorithm
      */
     @Override
     public void execute() {
-        wordsBag1 = firstConcept.getWordBag(this);
-        wordsBag2 = secondConcept.getWordBag(this);
+        wordsBag1 = firstConcept.getWordBag(this.relatedConceptsGenerator);
+        wordsBag2 = secondConcept.getWordBag(this.relatedConceptsGenerator);
         relatedness = calculateRelatedness();
-        normalizedRelatedness=Math.tanh(relatedness/25);
+        normalizedRelatedness = Math.tanh(relatedness / 25);
 
     }
 
     /**
      *
-     * @return
+     * @return the relatedness value
      */
     @Override
     protected double calculateRelatedness() {
@@ -54,6 +57,14 @@ public abstract class GlossAlgorithm<T extends RelatedConceptsGenerator> extends
         return result;
     }
 
+    /**
+     * the repetition counter
+     *
+     * @param word target word
+     * @param wordsBag the target bag
+     * @return the repetition count of the target word in the bag
+     */
+
     private int countRepetition(String word, ArrayList<String> wordsBag) {
         int result = 0;
         int len = wordsBag.size();
@@ -65,13 +76,13 @@ public abstract class GlossAlgorithm<T extends RelatedConceptsGenerator> extends
         return result;
 
     }
-    public void setRelatedConceptsGenerator(T generator){
-        this.relatedConceptsGenerator=generator;
+
+    public void setRelatedConceptsGenerator(T generator) {
+        this.relatedConceptsGenerator = generator;
     }
-    public T getRelatedConceptsGenerator(){
+
+    public T getRelatedConceptsGenerator() {
         return this.relatedConceptsGenerator;
     }
-
-
 
 }

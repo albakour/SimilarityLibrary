@@ -22,12 +22,20 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
     protected ArrayList<Concept> path;
     protected WeightFunction weighter;
 
-    public PathAlgorithm(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
+    public PathAlgorithm(Concept concept1, Concept concept2) {
+        super(concept1, concept2);
     }
 
+    public PathAlgorithm() {
+        super();
+    }
+
+    /**
+     * execute the algorithm
+     */
     @Override
     public void execute() {
+        //in case of differsnt part of speech
         if (this.firstConcept.getPartOfSpeech() != this.secondConcept.getPartOfSpeech()) {
             relatedness = 0;
             normalizedRelatedness = 0;
@@ -35,12 +43,13 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
             //defaultExecution();
             return;
         }
-        if(this.firstConcept.getPartOfSpeech()!=PosTagging.PartOfSpeech.Type.noun|| this.secondConcept.getPartOfSpeech()!=PosTagging.PartOfSpeech.Type.noun){
+        //the concepts are not in the same taxonomy
+        if (this.firstConcept.getPartOfSpeech() != PosTagging.PartOfSpeech.Type.noun || this.secondConcept.getPartOfSpeech() != PosTagging.PartOfSpeech.Type.noun) {
             defaultExecution();
             return;
         }
         lcs = semanticResource.getLcs(firstConcept, secondConcept);
-        // findLcs() should be called before findShortestPath() bcause the secod uses the first
+        // rder notice : findLcs() should be called before findShortestPath() bcause the secod uses the first
         if (lcs == null) {
             relatedness = 0;
             normalizedRelatedness = 0;
@@ -50,7 +59,7 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
         //
         path = semanticResource.getShortestPath(firstConcept, secondConcept, lcs);
 
-        // findShortestPath() should be called before calculatePathLength() bcause the secod uses the first
+        // order notice : findShortestPath() should be called before calculatePathLength() bcause the secod uses the first
         pathLength = calculatePathLength();
 
         relatedness = calculateRelatedness();
@@ -77,45 +86,6 @@ public abstract class PathAlgorithm<W extends WeightFunction> extends Similarity
     @Override
     protected abstract double calculateRelatedness();
 
-//    private ArrayList<Synset> findShortestPath() {
-//
-//        // the LCS is a node in the shortest path
-//        // findLcs() should be called before this funtion in execute() to have LCS found
-//        Synset commonParent = lcs;
-//
-//        // initializing lists 
-//        // to be returned 
-//        ArrayList<Synset> result = new ArrayList<>();
-//
-//        // the path form LCS to the first concept
-//        ArrayList<Synset> list1;
-//        list1 = WordNetHandler.findPathToChild(commonParent, firstConcept);
-//
-//        // the path form LCS to the escond concept
-//        ArrayList<Synset> list2;
-//        list2 = WordNetHandler.findPathToChild(commonParent, secondConcept);
-//
-//        int len1;
-//        len1 = list1.size();
-//        // use for not foreach because the members are an inverse order
-//        for (int i = len1 - 1; i >= 0; i--) {
-//            result.add(list1.remove(i));
-//        }
-//
-//        // to avoid repeating the LCS in the result
-//        list2.remove(0);
-//        for (Synset c : list2) {
-//            result.add(c);
-//        }
-//        return result;
-//
-//    }
-//    protected int depth(Synset concept) {
-//        NounSynset entity;
-//        entity = (NounSynset) WordNetHandler.getWrappingConcepts("entity")[0];
-//        List<Synset> list = findPathToChild(entity, concept);
-//        return list.size();
-//    }
     private double calculatePathLength() {
         //  the lenght of the path list is 1
         if (firstConcept.equals(secondConcept)) {

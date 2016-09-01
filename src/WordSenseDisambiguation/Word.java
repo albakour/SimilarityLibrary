@@ -7,6 +7,7 @@ package WordSenseDisambiguation;
 
 import PosTagging.PartOfSpeech;
 import ConceptRelatedness.Concept.Concept;
+import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.*;
 import SemanticResource.SemanticResourceHandler;
 import java.util.ArrayList;
 import PosTagging.PartOfSpeech.Type;
@@ -25,6 +26,9 @@ public class Word {
     public boolean isDisambiguated;
     private boolean areSensesGenerated;
     SemanticResourceHandler semanticResource;
+    private InformationContentCalculator icCalculator;
+    private boolean isIcCalculated;
+    private double informationContent;
 
     PartOfSpeech.Type partOfSpeech;
 
@@ -34,6 +38,10 @@ public class Word {
 
     }
 
+    /**
+     *
+     * @return the result of disambiguation process
+     */
     public Concept[] getDisamiguatedSenses() {
         if (isDisambiguated) {
             return disambiguatedSenses;
@@ -49,11 +57,13 @@ public class Word {
         }
         disambiguatedSenses = senses;
         isDisambiguated = true;
-        if (possibleSenses.length == 0||disambiguatedSenses.length == 0) {
+        if (possibleSenses.length == 0 || disambiguatedSenses.length == 0) {
             this.isDisambiguated = false;
         }
     }
-
+/**
+ * generates the senses that can be represented by the word 
+ */
     public void generatePossibleSenses() {
         possibleSenses = semanticResource.getWrappingConcepts(this);
         if (possibleSenses.length == 0) {
@@ -65,6 +75,37 @@ public class Word {
             }
         }
 
+    }
+/**
+ * 
+ * @return  information  content of the word 
+ */
+    public double getIc() {
+        InformationContentCalculator currentClaculator = InformationContentCalculatorFactory.produceObject();
+        if (currentClaculator.equals(this.icCalculator)) {
+            if (isIcCalculated) {
+                return this.informationContent;
+            }
+        }
+        this.icCalculator = currentClaculator;
+        double result = 0;
+        Concept[] senses;
+        if (isDisambiguated) {
+            senses = disambiguatedSenses;
+        } else {
+            senses = possibleSenses;
+        }
+        for (int i = 0; i < senses.length; i++) {
+            result += senses[i].getIc();
+        }
+        if (senses.length == 0) {
+            result = 0;
+        } else {
+            result /= senses.length;
+        }
+        this.informationContent = result;
+        this.isIcCalculated = true;
+        return result;
     }
 
     public Concept[] getPossibleSenses() {

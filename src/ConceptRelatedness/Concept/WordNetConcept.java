@@ -33,7 +33,7 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     /**
      *
-     * @return
+     * @return the object as string
      */
     @Override
     public String representAsString() {
@@ -54,7 +54,7 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     /**
      *
-     * @return
+     * @return the children nodes which are in the next level in the taxonomy
      */
     @Override
     public Concept[] getDirectAncestors() {
@@ -94,7 +94,7 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     /**
      *
-     * @return
+     * @return the first level of parents (if there are more than on parent)
      */
     @Override
     public Concept[] getDirectSuccessors() {
@@ -130,6 +130,11 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
         return new Concept[0];
     }
 
+    /**
+     * the length of the path from the root
+     *
+     * @return the length of the path from the root
+     */
     @Override
     public int getDepth() {
         // the root of the taxonomy
@@ -142,6 +147,10 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
         return list.size();
     }
 
+    /**
+     *
+     * @return the count of all successors of the concept in all levels
+     */
     @Override
     public int countSuccessors() {
         // to be returned
@@ -185,6 +194,12 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     }
 
+    /**
+     *
+     * returns the count of all ancestors of this concept
+     *
+     * @return
+     */
     @Override
     public int countAncestors() {
 
@@ -227,6 +242,10 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     }
 
+    /**
+     *
+     * @return the count of all the leaves that have this concept as an ancestor
+     */
     @Override
     public int countSuccessorLeaves() {
         int result = 0;
@@ -281,6 +300,10 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     }
 
+    /**
+     *
+     * @return the words listed in the gloss of the concept
+     */
     @Override
     public String[] getDirectWordBag() {
         String[] result;
@@ -291,6 +314,10 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
         return result;
     }
 
+    /**
+     *
+     * @return get concepts that contain this concept
+     */
     @Override
     public Concept[] getContainingConcepts() {
         // just for nouns
@@ -312,6 +339,11 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     }
 
+    /**
+     * get concepts that represent parts of this concept
+     *
+     * @return concepts that are parts of this concept
+     */
     @Override
     public Concept[] getPartsConcepts() {
         // just for noun concepts
@@ -331,6 +363,10 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
         return new Concept[0];
     }
 
+    /**
+     *
+     * @return return what semantic resource provide as similar senses
+     */
     @Override
     public Concept[] getSimilarConcepts() {
         // the result on list form
@@ -423,7 +459,7 @@ public class WordNetConcept extends Concept<Synset, WordNetHandler> {
 
     /**
      *
-     * @return
+     * @return the definition of the concept
      */
     @Override
     public String getDefinition() {

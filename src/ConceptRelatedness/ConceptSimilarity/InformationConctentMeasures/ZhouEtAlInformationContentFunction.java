@@ -23,7 +23,12 @@ public class ZhouEtAlInformationContentFunction extends InformationContentCalcul
         this.balanceFactor = balanceFactor;
     }
     
-
+    /**
+     * calculate information content value
+     *
+     * @param concept purpose concept
+     * @return information content value
+     */
     @Override
     public double calculateIC(Concept concept) {
        // formula

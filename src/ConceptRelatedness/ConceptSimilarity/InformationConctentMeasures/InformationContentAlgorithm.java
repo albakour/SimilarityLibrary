@@ -16,27 +16,30 @@ import PosTagging.PartOfSpeech;
  */
 public abstract class InformationContentAlgorithm extends SimilarityAlgorithm {
 
-    protected InformationContentCalculator informationContentFunction;
+   // protected InformationContentCalculator informationContentFunction;
+    public InformationContentAlgorithm(Concept concept1, Concept concept2) {
+        super(concept1, concept2);
+    }
 
-    public InformationContentAlgorithm(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
+    public InformationContentAlgorithm() {
+        super();
     }
 
     @Override
     protected abstract double calculateRelatedness();
 
     /**
-     *
+     * execute the algorithm
      */
     @Override
     public void execute() {
         if (this.firstConcept.getPartOfSpeech() != this.secondConcept.getPartOfSpeech()) {
             this.relatedness = 0;
             this.normalizedRelatedness = 0;
-            explanation="incompaible part of speech";
+            explanation = "incompaible part of speech";
             return;
         }
-        if(this.firstConcept.getPartOfSpeech()!=PartOfSpeech.Type.noun||this.secondConcept.getPartOfSpeech()!=PartOfSpeech.Type.noun){
+        if (this.firstConcept.getPartOfSpeech() != PartOfSpeech.Type.noun || this.secondConcept.getPartOfSpeech() != PartOfSpeech.Type.noun) {
             defaultExecution();
             return;
         }
@@ -55,7 +58,7 @@ public abstract class InformationContentAlgorithm extends SimilarityAlgorithm {
         // dealing with explanation
         explanation += "Lowest Common Subsummer : \n";
         explanation += lcs.representAsString();
-        explanation += "\nInformation content function formula : " + informationContentFunction.getFormula();
+        explanation += "\nInformation content function formula : " + lcs.getIcCalculator().getFormula();
     }
 
 }

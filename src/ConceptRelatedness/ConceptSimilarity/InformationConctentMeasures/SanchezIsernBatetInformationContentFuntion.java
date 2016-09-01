@@ -20,6 +20,13 @@ public class SanchezIsernBatetInformationContentFuntion extends InformationConte
         this.formula = "IC(c)=-log((1 + leaves(c)/subsumers(c) )/(max_leaves + 1 ))";
     }
 
+    /**
+     * calculate information content value
+     *
+     * @param concept purpose concept
+     * @return information content value
+     */
+
     @Override
     public double calculateIC(Concept concept) {
         // formula
@@ -30,7 +37,7 @@ public class SanchezIsernBatetInformationContentFuntion extends InformationConte
         //   - log ( _______________________ )
         //               max_leaves + 1
         double result;
-        double temp = (double) concept.countSuccessorLeaves() / (concept.countAncestors()+1) + 1;
+        double temp = (double) concept.countSuccessorLeaves() / (concept.countAncestors() + 1) + 1;
         temp /= (double) semanticResource.getMaxLeaves() + 1;
         result = (-1) * Math.log(temp);
         return result;

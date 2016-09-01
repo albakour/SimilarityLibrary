@@ -6,7 +6,6 @@
 package ConceptRelatedness;
 
 import ConceptRelatedness.GlossMesures.*;
-import SemanticResource.SemanticResourceHandler;
 
 /**
  *
@@ -14,28 +13,39 @@ import SemanticResource.SemanticResourceHandler;
  */
 public class DefaultConceptRelatednessMeasureFactory {
     static ConceptsRelatednessAlgorithm currentObject;
-
-    public static ConceptsRelatednessAlgorithm produceObject(String measureType, SemanticResourceHandler resource) {
+/***
+ * determines the type of the object wanted
+ * it exists because usually you need to specify the type on the application level 
+ * not every where 
+ * @param measureType the type of which the default measure needed
+ */
+    public static void setType(String measureType) {
         if (measureType.equals("traditional gloss")) {
-            TraditionalGlossMeasure object = new TraditionalGlossMeasure(null, null, resource);
+            TraditionalGlossMeasure object = new TraditionalGlossMeasure();
             currentObject=object;
-            return object;
+            return;
         }
         if (measureType.equals("extended gloss")) {
-            ExtendedGlossMasure object = new ExtendedGlossMasure(null, null, resource);
+            ExtendedGlossMasure object = new ExtendedGlossMasure();
             currentObject=object;
-            return object;
+            return;
         }
         if (measureType.equals("zero")) {
-            ZeroMeasure object = new ZeroMeasure(null, null, resource);
+            ZeroMeasure object = new ZeroMeasure();
             currentObject=object;
-            return object;
+            return;
         }
-        ZeroMeasure object = new ZeroMeasure(null, null, resource);
+        ZeroMeasure object = new ZeroMeasure();
         currentObject=object;
-        return object;
     }
-    public static ConceptsRelatednessAlgorithm getCurrentObject(){
+    /**
+     * 
+     * @return the current default measure according to configuration file
+     */
+    public static ConceptsRelatednessAlgorithm produceObject(){
+        if(currentObject==null){
+            setType("zero");
+        }
         return currentObject;
     }
 

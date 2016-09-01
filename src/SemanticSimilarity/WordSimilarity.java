@@ -39,42 +39,42 @@ public class WordSimilarity {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         //System.out.println("collecting WordNet statistics ... ");
-        SemanticResourceHandler semanticResource = SemanticResourceHandlerFactory.produceObject("wordnet", "", dictionaryPath);
+        SemanticResourceHandler semanticResource = SemanticResourceHandlerFactory.setConfiguration("wordnet", "", dictionaryPath);
         // WordNetHandler semanticResource2 = (WordNetHandler) SemanticResourceHandlerFactory.produceObject("wordnet", dictionaryPath);
         InformationContentCalculatorFactory.setSemanticResource(semanticResource);
-        DefaultConceptRelatednessMeasureFactory.produceObject("traditional gloss", semanticResource);
+        DefaultConceptRelatednessMeasureFactory.setType("traditional gloss");
         StanfordPostHandler posTagger = new StanfordPostHandler();
         posTagger.connect(englishTaggerPath);
         //___________________________________
         //     test data set
         //___________________________________
-        PrintWriter writer = new PrintWriter("out.txt");
-        double alpha, beta;
-        alpha = 0.2;
-        beta = 0.6;
-        String[] defaultMeasure = {"zero","traditional gloss","extended gloss"};
-        PathMeasure pMeasure = new PathMeasure(null, null, semanticResource);
-        WuPalmerMeasure wMeasure = new WuPalmerMeasure(null, null, semanticResource);
-        LeakcockChodorowMeasure LMeasure = new LeakcockChodorowMeasure(null, null, semanticResource);
-        LiMeasure LiMeasure = new LiMeasure(alpha, beta, null, null, semanticResource);
-        ConceptsRelatednessAlgorithm[] measures = {pMeasure,wMeasure,LMeasure,LiMeasure};
-        TestDataSet test = new TestDataSet("dataset.txt", defaultMeasure, measures, posTagger, semanticResource);
-        String result = test.test();
-        writer.println(result);
-        writer.close();
-        //System.out.println(result);
-
-//        String sentence1, sentence2;
-//        sentence1 = "pure hearts can see the beauty of the nature";//"worldwide 123 sars cases and 543 deaths have been reported in 342 countries";//
-//        sentence2 = "honest people feel the beauty of the earth";//"Tiwan reported 125 new cases for a 234 total of with 432 deaths";
+//        PrintWriter writer = new PrintWriter("out.txt");
 //        double alpha, beta;
 //        alpha = 0.2;
 //        beta = 0.6;
-//        ExtendedLeskAlgorithm leskE = new ExtendedLeskAlgorithm(null, null, semanticResource);
-//        leskE.setWindowSize(10);
-//        SentenceSenseDisambiguator sentenceDisambiguator = new SentenceSenseDisambiguator("", leskE, semanticResource, posTagger);
-////
-//        // PathMeasure measure = new PathMeasure(null, null, semanticResource);
+//        String[] defaultMeasure = {"zero","traditional gloss","extended gloss"};
+//        PathMeasure pMeasure = new PathMeasure(null, null, semanticResource);
+//        WuPalmerMeasure wMeasure = new WuPalmerMeasure(null, null, semanticResource);
+//        LeakcockChodorowMeasure LMeasure = new LeakcockChodorowMeasure(null, null, semanticResource);
+//        LiMeasure LiMeasure = new LiMeasure(alpha, beta, null, null, semanticResource);
+//        ConceptsRelatednessAlgorithm[] measures = {pMeasure,wMeasure,LMeasure,LiMeasure};
+//        TestDataSet test = new TestDataSet("dataset.txt", defaultMeasure, measures, posTagger, semanticResource);
+//        String result = test.test();
+//        writer.println(result);
+//        writer.close();
+//        //System.out.println(result);
+//
+        String sentence1, sentence2;
+        sentence1 = "pure hearts can see the beauty of the nature";//"worldwide 123 sars cases and 543 deaths have been reported in 342 countries";//
+        sentence2 = "honest people feel the beauty of the earth";//"Tiwan reported 125 new cases for a 234 total of with 432 deaths";
+        double alpha, beta;
+        alpha = 0.2;
+        beta = 0.6;
+        ExtendedLeskAlgorithm leskE = new ExtendedLeskAlgorithm();
+        leskE.setWindowSize(10);
+        SentenceSenseDisambiguator sentenceDisambiguator = new SentenceSenseDisambiguator("", leskE, semanticResource, posTagger);
+//
+         PathMeasure measure = new PathMeasure();
 //        //JiangMeasure measure =new JiangMeasure(null, null, semanticResource);
 //        // WuPalmerMeasure measure =new WuPalmerMeasure(null, null, semanticResource);
 //        // LeakcockChodorowMeasure measure = new LeakcockChodorowMeasure(null, null, semanticResource);
@@ -103,7 +103,7 @@ public class WordSimilarity {
 //                System.out.println(sentence2);
 //                System.out.println("");
 //                //InformationContentCalculator icCalc = InformationContentCalculatorFactory.produceObject();
-//                LiVectorBasedSentenceSimilarityAlgorithm vecAlgo = new LiVectorBasedSentenceSimilarityAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure);
+//                LiVectorMeasure vecAlgo = new LiVectorMeasure(sentence1, sentence2, sentenceDisambiguator, measure);
 //                vecAlgo.execute();
 //                WordOrderAlgorithm wordOrderAlgo = new WordOrderAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure);
 //                wordOrderAlgo.execute();
@@ -168,37 +168,38 @@ public class WordSimilarity {
 //        System.out.println("rejection : " + helper.rejection());
 //        System.out.println("accuracy : " + helper.accuracy());
 //        System.out.println("F Measure : " + helper.fMeasure(1));
-        //__________________________________________
-        //            end test data set
-        //__________________________________________
-//        InformationContentCalculator icCalc = InformationContentCalculatorFactory.produceObject();
-//        LiVectorBasedSentenceSimilarityAlgorithm vecAlgo = new LiVectorBasedSentenceSimilarityAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure, icCalc);
-//        System.out.println("Vector Similarity Algorithm");
-//        vecAlgo.execute();
-//        System.out.println(vecAlgo.getSimilarity());
-//        System.out.println("Optimal Graph Matching Similarity Algorithm");
-//        BipertiteGraphOptimalMatchingAlgorithm omAlgo = new BipertiteGraphOptimalMatchingAlgorithm(null);
-//        OptimalGraphMatchingBasedSimilarityAlgorithm omSimAlgo = new OptimalGraphMatchingBasedSimilarityAlgorithm(sentence1, sentence2, omAlgo, sentenceDisambiguator, measure);
-//        omSimAlgo.execute();
-//        System.out.println(omSimAlgo.getSimilarity());
-//        WordOrderAlgorithm wordOrderAlgo = new WordOrderAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure);
-//        wordOrderAlgo.execute();
-//        System.out.println("WordOrder Algorithm");
-//        System.out.println(wordOrderAlgo.getSimilarity());
-//        System.out.println("Combined Algorithm Vector & Word Order :");
-//        double sim = 0.8 * vecAlgo.getSimilarity() + 0.2 * wordOrderAlgo.getSimilarity();
-//        System.out.println(sim);
-//        System.out.println("Combined Algorithm Optimal Matching & Word Order :");
-//        sim = 0.8 * omSimAlgo.getSimilarity() + 0.2 * wordOrderAlgo.getSimilarity();
-//        System.out.println(sim);
-        // init to collect statistics 
-        //        //semanticResource.init();
-        //        System.out.println("number of concepts : " + semanticResource.getNumberOfConcepts());
-        //        System.out.println("max depth : " + semanticResource.getMaxDepth());
-        //        System.out.println("number of leaves : " + semanticResource.getMaxLeaves());
-        //        System.out.println("average number of direct successors : " + semanticResource.getAverageNumberOfDirectSuccessors());
-        //        // System.out.println("average number of parent edges : " + WordNetHandler.calculateParentEdegeAverageNouns());
-        //        System.out.println("");
+//        __________________________________________
+//                    end test data set
+//        __________________________________________
+        InformationContentCalculatorFactory.setType("seco");
+        LiVectorMeasure vecAlgo = new LiVectorMeasure(sentence1, sentence2, sentenceDisambiguator, measure);
+        System.out.println("Vector Similarity Algorithm");
+        vecAlgo.execute();
+        System.out.println(vecAlgo.getSimilarity());
+        System.out.println("Optimal Graph Matching Similarity Algorithm");
+        BipertiteGraphOptimalMatchingAlgorithm omAlgo = new BipertiteGraphOptimalMatchingAlgorithm(null);
+        
+        OptimalGraphMatchingBasedSimilarityAlgorithm omSimAlgo = new MouhibiMatchingMeasure(sentence1, sentence2, null,omAlgo, sentenceDisambiguator, measure);
+        omSimAlgo.execute();
+        System.out.println(omSimAlgo.getSimilarity());
+        WordOrderAlgorithm wordOrderAlgo = new WordOrderAlgorithm(sentence1, sentence2, sentenceDisambiguator, measure);
+        wordOrderAlgo.execute();
+        System.out.println("WordOrder Algorithm");
+        System.out.println(wordOrderAlgo.getSimilarity());
+        System.out.println("Combined Algorithm Vector & Word Order :");
+        double sim = 0.8 * vecAlgo.getSimilarity() + 0.2 * wordOrderAlgo.getSimilarity();
+        System.out.println(sim);
+        System.out.println("Combined Algorithm Optimal Matching & Word Order :");
+        sim = 0.8 * omSimAlgo.getSimilarity() + 0.2 * wordOrderAlgo.getSimilarity();
+        System.out.println(sim);
+//         init to collect statistics 
+//                //semanticResource.init();
+//                System.out.println("number of concepts : " + semanticResource.getNumberOfConcepts());
+//                System.out.println("max depth : " + semanticResource.getMaxDepth());
+//                System.out.println("number of leaves : " + semanticResource.getMaxLeaves());
+//                System.out.println("average number of direct successors : " + semanticResource.getAverageNumberOfDirectSuccessors());
+//                // System.out.println("average number of parent edges : " + WordNetHandler.calculateParentEdegeAverageNouns());
+//                System.out.println("");
         //_________________________________________________________
         // test Disambiguation
         //_________________________________________________________

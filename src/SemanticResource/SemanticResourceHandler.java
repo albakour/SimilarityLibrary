@@ -28,42 +28,42 @@ public abstract class  SemanticResourceHandler {
     public abstract int getNumberOfConcepts();
 
     /**
-     * returns the maximum depth form the root of the taxonomy
+     * returns 
      *
-     * @return
+     * @return the maximum depth form the root of the taxonomy
      */
     public abstract int getMaxDepth();
 
     /**
-     * returns the number of leaves in the taxonomy
+     * returns 
      *
-     * @return
+     * @return the number of leaves in the taxonomy
      */
     public abstract int getMaxLeaves();
 
     /**
-     * returns the average number of direct children in the taxonomy
+     * returns 
      *
-     * @return
+     * @return the average number of direct children in the taxonomy
      */
     public abstract double getAverageNumberOfDirectSuccessors();
 
     /**
-     * returns the shortest path between concepts concept1 concept2 that pass by
+     * returns 
      * Lowest Common Subsummer of both concepts
      *
      * @param concept1
      * @param concept2
      * @param lcs
-     * @return
+     * @return the shortest path between concepts concept1 concept2 that pass by
      */
     public abstract ArrayList<Concept> getShortestPath(Concept concept1, Concept concept2, Concept lcs);
 
     /**
-     * returns the Lowest Common Subsummer of the concepts concept1 concept2
+     * returns 
      * @param concept1
      * @param concept2
-     * @return
+     * @return the Lowest Common Subsummer of the concepts concept1 concept2
      */
     public Concept getLcs(Concept concept1, Concept concept2){
         return lcsGetter.getLcs(concept1, concept2);

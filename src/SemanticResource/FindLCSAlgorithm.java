@@ -17,7 +17,7 @@ public  interface FindLCSAlgorithm {
      *
      * @param concept1
      * @param concept2
-     * @return
+     * @return the lowest common subsumer of the two concepts
      */
     public Concept getLcs(Concept concept1,Concept concept2); 
 }

@@ -19,6 +19,11 @@ public class Vector {
         this.projections = projections;
     }
 
+    /**
+     *
+     * @return the euclid length of the vector
+     * @throws DimensionsDoNotMatchException
+     */
     public double euclidNorm() throws DimensionsDoNotMatchException {
         double res = this.scalarProduct(this);
         res = Math.sqrt(res);
@@ -26,6 +31,12 @@ public class Vector {
 
     }
 
+    /**
+     *
+     * @param v considered vector to do production with
+     * @return the standard scalar product between this vector and v
+     * @throws DimensionsDoNotMatchException
+     */
     public double scalarProduct(Vector v) throws DimensionsDoNotMatchException {
         if (v.size() != this.size()) {
             throw new DimensionsDoNotMatchException();
@@ -39,6 +50,12 @@ public class Vector {
 
     }
 
+    /**
+     *
+     * @param v
+     * @return the cosine of the angle between this vector and v
+     * @throws DimensionsDoNotMatchException
+     */
     public double cos(Vector v) throws DimensionsDoNotMatchException {
         double norm1, norm2, scalar;
         norm1 = this.euclidNorm();
@@ -48,6 +65,12 @@ public class Vector {
 
     }
 
+    /**
+     *
+     * @param v
+     * @return subtraction result as vector
+     * @throws DimensionsDoNotMatchException
+     */
     public Vector subtract(Vector v) throws DimensionsDoNotMatchException {
         Vector result;
         ArrayList<Double> projs = new ArrayList<>();
@@ -58,6 +81,12 @@ public class Vector {
         return result;
     }
 
+    /**
+     *
+     * @param v
+     * @return adding result as vector
+     * @throws DimensionsDoNotMatchException
+     */
     public Vector add(Vector v) throws DimensionsDoNotMatchException {
         Vector result;
         ArrayList<Double> projs = new ArrayList<>();
@@ -68,6 +97,10 @@ public class Vector {
         return result;
     }
 
+    /**
+     *
+     * @return vector with opposite entries
+     */
     public Vector opposite() {
         Vector result;
         ArrayList<Double> projs = new ArrayList<>();

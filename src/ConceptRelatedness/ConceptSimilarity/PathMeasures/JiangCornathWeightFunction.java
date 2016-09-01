@@ -9,22 +9,20 @@ import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.Informat
 import ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures.InformationContentCalculatorFactory;
 import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
+import SemanticResource.SemanticResourceHandlerFactory;
 
 /**
  *
  * @author sobhy
  */
-public class JiangCornathWeightFunction extends WeightFunction {
+public class JiangCornathWeightFunction implements WeightFunction {
 
     double alpha;
     double beta;
-    InformationContentCalculator informationContentFunction;
 
-    public JiangCornathWeightFunction(double alpha, double beta, SemanticResourceHandler resource) {
-        super(resource);
+    public JiangCornathWeightFunction(double alpha, double beta) {
         this.alpha = alpha;
         this.beta = beta;
-
     }
 
     @Override
@@ -35,8 +33,10 @@ public class JiangCornathWeightFunction extends WeightFunction {
         //  weight(parent,child)=(beta + (1-beta)(average_number_of_edges/number_of_children(parent)))
         //*((depth(parent)+1)/depth(parent))^lapha*(IC(child)-IC(parent))
         //
-        informationContentFunction = InformationContentCalculatorFactory.produceObject();
-        double betaPart = beta + (1 - beta) * (semanticResource.getAverageNumberOfDirectSuccessors() /parent.getDirectSuccessors().length);
+        
+        InformationContentCalculator informationContentFunction = InformationContentCalculatorFactory.produceObject();
+        SemanticResourceHandler resource = SemanticResourceHandlerFactory.produceObject();
+        double betaPart = beta + (1 - beta) * (resource.getAverageNumberOfDirectSuccessors() / parent.getDirectSuccessors().length);
         int depth = parent.getDepth();
         double alphaPart = Math.pow((double) (depth + 1) / depth, alpha);
         double icPart = informationContentFunction.calculateIC(child) - informationContentFunction.calculateIC(parent);

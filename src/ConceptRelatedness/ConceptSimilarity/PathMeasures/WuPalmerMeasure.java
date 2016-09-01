@@ -8,17 +8,24 @@ package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
-
 /**
  *
  * @author sobhy
  */
-public class WuPalmerMeasure extends PathAlgorithm <UnitFunction> {
+public class WuPalmerMeasure extends PathAlgorithm<UnitFunction> {
 
-    public WuPalmerMeasure(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
-        weighter=new UnitFunction(resource);
+    public WuPalmerMeasure(Concept concept1, Concept concept2) {
+        super(concept1, concept2);
+        weighter = new UnitFunction();
 
+        formula = "sim(c1,c2)=2*depth(lcs(c1,c2))/(2*depth(lcs(c1,c2))+len(c1,c2)";
+        maximum = 1;
+        minimum = 0;
+    }
+
+    public WuPalmerMeasure() {
+        super();
+        weighter = new UnitFunction();
         formula = "sim(c1,c2)=2*depth(lcs(c1,c2))/(2*depth(lcs(c1,c2))+len(c1,c2)";
         maximum = 1;
         minimum = 0;

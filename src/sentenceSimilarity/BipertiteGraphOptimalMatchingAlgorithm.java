@@ -23,6 +23,10 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
         super(graph);
     }
 
+    /**
+     * execute the algorithm
+     */
+
     @Override
     public void execute() {
         tempGraph = this.graph;
@@ -226,14 +230,19 @@ public class BipertiteGraphOptimalMatchingAlgorithm extends OptimalGraphMatching
         double result = 0;
         for (int i = 0; i < this.optimalMatching.length; i++) {
             for (int j = 0; j < this.optimalMatching[i].length; j++) {
-                if(optimalMatching[i][j]!=-1){
-                    result+=optimalMatching[i][j];
+                if (optimalMatching[i][j] != -1) {
+                    result += optimalMatching[i][j];
                 }
             }
         }
         return result;
     }
 
+    /**
+     * represent the matching as two dimension array the entry [i,j] has the
+     * value -1 if the edge (i,j) does not exist in the matching else the value
+     * is the weight of the edge
+     */
     private void fillOptimalMatching() {
         int dim1, dim2;
         dim1 = this.graph.length;

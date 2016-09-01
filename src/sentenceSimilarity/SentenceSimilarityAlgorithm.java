@@ -8,7 +8,6 @@ package sentenceSimilarity;
 import ConceptRelatedness.ConceptsRelatednessAlgorithm;
 import WordSenseDisambiguation.SentenceSenseDisambiguator;
 import WordSenseDisambiguation.Word;
-import WordSenseDisambiguation.WordSenseDisambiguationAlgorithm;
 
 /**
  *
@@ -18,44 +17,67 @@ import WordSenseDisambiguation.WordSenseDisambiguationAlgorithm;
  * @param <POST> Part Of Speech Tagger
  *
  */
-public abstract class SentenceSimilarityAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, RelatAlgo extends ConceptsRelatednessAlgorithm> {
+public abstract class SentenceSimilarityAlgorithm {
 
     protected String sentence1;
     protected String sentence2;
     protected Word[] sentenceWords1;
     protected Word[] sentenceWords2;
-    protected SentenceSenseDisambiguator<WSDA> sentenceSenseisambiguator;
-    protected RelatAlgo conceptRelatednessAlgorithm;
+    protected SentenceSenseDisambiguator sentenceSensedisambiguator;
+    protected ConceptsRelatednessAlgorithm conceptRelatednessAlgorithm;
     protected double similarity;
     // default 10
     protected int windowSize;
 
-    public SentenceSimilarityAlgorithm(String sentence1, String sentence2, SentenceSenseDisambiguator<WSDA> disambiguator, RelatAlgo conceptRelatednessAlgorithm) {
+    public SentenceSimilarityAlgorithm(String sentence1, String sentence2, SentenceSenseDisambiguator disambiguator, ConceptsRelatednessAlgorithm conceptRelatednessAlgorithm) {
         this.sentence1 = sentence1;
         this.sentence2 = sentence2;
         this.windowSize = 10;
-        this.sentenceSenseisambiguator = disambiguator;
+        this.sentenceSensedisambiguator = disambiguator;
         this.conceptRelatednessAlgorithm = conceptRelatednessAlgorithm;
         this.sentenceWords1 = getSenteceWords(sentence1);
         this.sentenceWords2 = getSenteceWords(sentence2);
     }
 
+    /**
+     * execute the algorithm
+     */
     public abstract void execute();
 
+    /**
+     * calculate and return similarity between the two sentences
+     * @return similarity between the two sentences
+     */
     public abstract double calculateSimilarity();
 
+    /**
+     *
+     * @param size the size of the window of disambiguation process
+     */
     public void setWindowSize(int size) {
         this.windowSize = size;
     }
 
     private Word[] getSenteceWords(String sentence) {
-        this.sentenceSenseisambiguator.setSentence(sentence);
-        this.sentenceSenseisambiguator.execute(windowSize);
-        return this.sentenceSenseisambiguator.getDisambiguatedWords();
+        this.sentenceSensedisambiguator.setSentence(sentence);
+        this.sentenceSensedisambiguator.execute(windowSize);
+        return this.sentenceSensedisambiguator.getDisambiguatedWords();
     }
 
+    /**
+     *
+     * @return similarity between the two sentences
+     */
     public double getSimilarity() {
         return this.similarity;
     }
 
+    public void setSentenceSensedsambiguator(SentenceSenseDisambiguator sentenceSensedisambiguator) {
+        this.sentenceSensedisambiguator = sentenceSensedisambiguator;
+    }
+
+    public void setConceptRelatednessAlgorithm(ConceptsRelatednessAlgorithm algo) {
+        this.conceptRelatednessAlgorithm = algo;
+
+    }
 }

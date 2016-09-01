@@ -25,6 +25,11 @@ public class Helper {
         }
         return false;
     }
+    /**
+     * 
+     * @param sentence
+     * @return  the words of the sentence
+     */
 
     public static String[] getWordsFormSentence(String sentence) {
         // remove white spaces
@@ -48,7 +53,7 @@ public class Helper {
     /**
      * remove punctuation 
      * @param sentence
-     * @return 
+     * @return sentence without punctuation
      */
 
     public static String prepare(String sentence) {
@@ -68,9 +73,9 @@ public class Helper {
     /**
      * to combine the two sentences in one and delete the repetitions
      *
-     * @param sentenceWords1
+     * @param sentenceWords1 
      * @param sentenceWords2
-     * @return
+     * @return the union of two sentences
      */
 
     public static Word[] combineSentences(Word[] sentenceWords1, Word[] sentenceWords2) {

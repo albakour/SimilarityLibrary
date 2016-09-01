@@ -15,7 +15,6 @@ import SemanticResource.SemanticResourceHandler;
 public abstract class ConceptsRelatednessAlgorithm {
 
     // the semantic resource
-
     protected SemanticResourceHandler semanticResource;
 
     // the final result
@@ -33,17 +32,36 @@ public abstract class ConceptsRelatednessAlgorithm {
     protected double maximum;
     protected double minimum;
 
-    public ConceptsRelatednessAlgorithm(Concept concept1, Concept concept2, SemanticResourceHandler semanticResource) {
+    public ConceptsRelatednessAlgorithm(Concept concept1, Concept concept2) {
         this.firstConcept = concept1;
         this.secondConcept = concept2;
-        this.semanticResource = semanticResource;
+        // this.semanticResource = semanticResource;
+        this.semanticResource = SemanticResource.SemanticResourceHandlerFactory.produceObject();
         explanation = "";
     }
 
+    public ConceptsRelatednessAlgorithm() {
+        this.semanticResource = SemanticResource.SemanticResourceHandlerFactory.produceObject();
+        explanation = "";
+    }
+
+    /**
+     * execute the algorithm
+     */
     public abstract void execute();
 
+    /**
+     * calculate relatedness value
+     *
+     * @return the relatedness value
+     */
     protected abstract double calculateRelatedness();
 
+    /**
+     * maps the relatedness value with a value in [0,1]
+     *
+     * @return the relatedness in [0,1]
+     */
     protected double normalizeRelatedness() {
         return (relatedness - minimum) / (maximum - minimum);
     }
@@ -81,7 +99,8 @@ public abstract class ConceptsRelatednessAlgorithm {
     public double getMinimum() {
         return this.minimum;
     }
-    public double getNormalizedRelatedness(){
+
+    public double getNormalizedRelatedness() {
         return this.normalizedRelatedness;
     }
 

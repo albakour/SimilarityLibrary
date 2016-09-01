@@ -17,11 +17,11 @@ import PosTagging.PostHandler;
 /**
  *
  * @author sobhy
- * @param <WSDA> Word Sense Disambiguation Algorithm  
+ * @param <WSDA> Word Sense Disambiguation Algorithm
  * @param <RelatAlgo> Relatedness between Concepts Algorithm
- * @param <POST>   Part Of Speech Tagger
+ * @param <POST> Part Of Speech Tagger
  */
-public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, RelatAlgo extends ConceptsRelatednessAlgorithm> extends SentenceSimilarityAlgorithm<WSDA, RelatAlgo> {
+public class WordOrderAlgorithm extends SentenceSimilarityAlgorithm {
 
     Vector orderVector1;
     Vector orderVector2;
@@ -32,12 +32,15 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
     //default 0.5
     private double threshold;
 
-    public WordOrderAlgorithm(String sentece1, String sentence2, SentenceSenseDisambiguator<WSDA> disambiguator,RelatAlgo conceptRelatednessAlgorithm) {
+    public WordOrderAlgorithm(String sentece1, String sentence2, SentenceSenseDisambiguator disambiguator, ConceptsRelatednessAlgorithm conceptRelatednessAlgorithm) {
         super(sentece1, sentence2, disambiguator, conceptRelatednessAlgorithm);
         isCombined = false;
         threshold = 0.5;
     }
 
+    /**
+     * execute the algorithm
+     */
     @Override
     public void execute() {
         orderVector1 = generateVector(sentenceWords1);
@@ -45,6 +48,12 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
         similarity = calculateSimilarity();
 
     }
+
+    /**
+     * calculate and return the value of similarity
+     *
+     * @return the value of similarity
+     */
 
     @Override
     public double calculateSimilarity() {
@@ -101,10 +110,10 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
         // word match case
         int index = Helper.SentenceContainsWord(sentence, combinedSentence[i]);
         if (index >= 0) {
-            return index+1;
+            return index + 1;
         }
         // search for the best similar concept and get the index
-        return calculateWordEntry(combinedSentence[i], sentence)+1;
+        return calculateWordEntry(combinedSentence[i], sentence) + 1;
 
     }
 
@@ -119,7 +128,7 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
     private int calculateWordEntry(Word word, Word[] sentence) {
         // after applying the disambiguation algorithm, the word may still have multiple senses
         //so there is an array of senses
-        if(!word.isDisambiguated){
+        if (!word.isDisambiguated) {
             return 0;
         }
         Concept[] senses = word.getDisamiguatedSenses();
@@ -174,7 +183,7 @@ public class WordOrderAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, R
      */
     private double getConceptWordScore(Concept concept, Word word) {
         double max = -1;
-        if(!word.isDisambiguated){
+        if (!word.isDisambiguated) {
             return 0;
         }
         Concept[] senses = word.getDisamiguatedSenses();

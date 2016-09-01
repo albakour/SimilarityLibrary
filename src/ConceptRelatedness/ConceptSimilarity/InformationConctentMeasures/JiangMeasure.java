@@ -8,18 +8,24 @@ package ConceptRelatedness.ConceptSimilarity.InformationConctentMeasures;
 import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
-
 /**
  *
  * @author sobhy
  */
 public class JiangMeasure extends InformationContentAlgorithm {
 
-    public JiangMeasure(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
+    public JiangMeasure(Concept concept1, Concept concept2) {
+        super(concept1, concept2);
         maximum = Double.MAX_VALUE;
         minimum = 0;
-        formula="sim(c1,c2)=1/(IC(c1)+IC(c2)-2IC(LCS(c1,c2)))";
+        formula = "sim(c1,c2)=1/(IC(c1)+IC(c2)-2IC(LCS(c1,c2)))";
+    }
+
+    public JiangMeasure() {
+        super();
+        maximum = Double.MAX_VALUE;
+        minimum = 0;
+        formula = "sim(c1,c2)=1/(IC(c1)+IC(c2)-2IC(LCS(c1,c2)))";
     }
 
     @Override
@@ -29,13 +35,11 @@ public class JiangMeasure extends InformationContentAlgorithm {
         //  ________________________________________
         //  IC (c1) + IC (c2) - 2 IC ( LCS ( c1,c1) ) 
 
-        this.informationContentFunction = InformationContentCalculatorFactory.produceObject();
         double result;
 
-        result = informationContentFunction.calculateIC(firstConcept) + informationContentFunction.calculateIC(secondConcept);
-        result -= 2 * informationContentFunction.calculateIC(lcs);
+        result = firstConcept.getIc() + secondConcept.getIc();
+        result -= 2 * lcs.getIc();
         result = 1 / result;
-
         return result;
     }
 }

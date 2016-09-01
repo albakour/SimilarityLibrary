@@ -17,7 +17,7 @@ import PosTagging.PostHandler;
  * @author sobhy
  * @param <T>
  */
-public class SentenceSenseDisambiguator/*<T extends WordSenseDisambiguationAlgorithm>*/ {
+public class SentenceSenseDisambiguator {
 
     String sentence;
     Word[] sentenceWords;
@@ -47,6 +47,7 @@ public class SentenceSenseDisambiguator/*<T extends WordSenseDisambiguationAlgor
         for (int i = 0; i < sentenceWords.length; i++) {
             wordSenseDisambiguator.setTargetWord(sentenceWords[i]);
             wordSenseDisambiguator.execute();
+
             // because the disambiguator may set null the word
             // if it has to be ignored becauese of the part of speech
             if (wordSenseDisambiguator.getDisambiguatedWord() != null) {
@@ -64,6 +65,10 @@ public class SentenceSenseDisambiguator/*<T extends WordSenseDisambiguationAlgor
         return null;
     }
 
+    /**
+     *
+     * @return initiates the words of the sentence as word class objects
+     */
     private Word[] generateSentenceWords() {
         String[] strings = Helper.getWordsFormSentence(sentence);
         String taggedSentence = posTagger.getTaggedSentence(sentence);
@@ -96,30 +101,31 @@ public class SentenceSenseDisambiguator/*<T extends WordSenseDisambiguationAlgor
         this.posTagger = tagger;
     }
 
+    /**
+     *
+     * @return the disambiguation result as a string
+     */
     public String resultToString() {
-        String result="";
+        String result = "";
         if (!isDisambiguated) {
-           // System.out.println("not disambiguated!!");
-            result+="not disambiguated!!\n";
+            // System.out.println("not disambiguated!!");
+            result += "not disambiguated!!\n";
         }
-        //System.out.println("Disambiguating the sentence (" + sentence + "):");
-        //System.out.println("");
-        result+="Disambiguating the sentence (" + sentence + "):\n________\n";
+       
+       
+        result += "Disambiguating the sentence (" + sentence + "):\n________\n";
         for (Word word : sentenceWords) {
             Concept[] senses = word.getDisamiguatedSenses();
             if (senses != null) {
-                result+="Disambiguating (" + word.value + ") :  ( "+senses.length+" ) out of ("+word.getPossibleSenses().length+" ) possible senses\n\n";
-                //System.out.println("Disambiguating (" + word.value + ") : which has "+word.getPossibleSenses().length+" possible senses");
-                
+                result += "Disambiguating (" + word.value + ") :  ( " + senses.length + " ) out of (" + word.getPossibleSenses().length + " ) possible senses\n\n";
+               
                 for (int i = 0; i < senses.length; i++) {
-                    result+=(i + 1) + "-" + senses[i].getDefinition()+"\n";
-                    //System.out.println((i + 1) + "-" + senses[i].getDefinition());
-                   // System.out.println(senses[i].getWordBag(new ExtendedGlossMasure(null, null, semanticResource)));
+                    result += (i + 1) + "-" + senses[i].getDefinition() + "\n";
                 }
-                
+
             }
-            result+="\n";
-            //System.out.println("");
+            result += "\n";
+            
         }
         return result;
     }

@@ -12,7 +12,12 @@ import java.util.ArrayList;
  * @author sobhy
  */
 public interface RelatedConceptsGenerator {
-    
+
+    /**
+     *
+     * @param concept
+     * @return the related concepts of the concept
+     */
     public abstract ArrayList<Concept> generate(Concept concept);
-    
+
 }

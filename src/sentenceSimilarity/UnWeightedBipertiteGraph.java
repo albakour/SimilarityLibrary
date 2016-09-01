@@ -124,6 +124,9 @@ public class UnWeightedBipertiteGraph {
         }
     }
 
+    /**
+     * calculate min vertex cover
+     */
     private void minVertexCover() {
         // find min vertex cover from marked[] array
         inMinVertexCover = new boolean[vertices];
@@ -136,6 +139,10 @@ public class UnWeightedBipertiteGraph {
             }
         }
     }
+    /**
+     * 
+     * @return is there any augmenting path?
+     */
 
     private boolean hasAugmentingPath() {
         clearPath();
@@ -171,7 +178,7 @@ public class UnWeightedBipertiteGraph {
     }
 
     /**
-     * is the vertex in the left side of the graph
+     * is the vertex in the left side of the graph?
      *
      * @param vertex
      * @return
@@ -276,7 +283,7 @@ public class UnWeightedBipertiteGraph {
 
     /**
      *
-     * @return
+     * @return the cardinality of the optimal matching 
      */
     public int getCardinality() {
         return this.cardinality;

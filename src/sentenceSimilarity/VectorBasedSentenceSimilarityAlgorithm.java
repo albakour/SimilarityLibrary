@@ -19,7 +19,7 @@ import PosTagging.PostHandler;
  * calculating the similarity
  * @param <POST> Part Of Speech Tagger
  */
-public abstract class VectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSenseDisambiguationAlgorithm, RelatAlgo extends ConceptsRelatednessAlgorithm> extends SentenceSimilarityAlgorithm<WSDA, RelatAlgo> {
+public abstract class VectorBasedSentenceSimilarityAlgorithm extends SentenceSimilarityAlgorithm{
 
     Vector vector1;
     Vector vector2;
@@ -31,10 +31,14 @@ public abstract class VectorBasedSentenceSimilarityAlgorithm<WSDA extends WordSe
      * @param disambiguator
      * @param conceptRelatednessAlgorithm
      */
-    public VectorBasedSentenceSimilarityAlgorithm(String sentece1, String sentence2, SentenceSenseDisambiguator<WSDA> disambiguator, RelatAlgo conceptRelatednessAlgorithm) {
+    public VectorBasedSentenceSimilarityAlgorithm(String sentece1, String sentence2, SentenceSenseDisambiguator disambiguator,ConceptsRelatednessAlgorithm conceptRelatednessAlgorithm) {
         super(sentece1, sentence2, disambiguator, conceptRelatednessAlgorithm);
     }
-
+/**
+ * 
+ * @param sentence
+ * @return the vector which represents the sentence in this algorithm 
+ */
     public abstract Vector generateVector(Word[] sentence);
 
     /**

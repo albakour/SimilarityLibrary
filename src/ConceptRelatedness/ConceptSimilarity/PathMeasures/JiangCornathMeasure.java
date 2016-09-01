@@ -5,7 +5,6 @@
  */
 package ConceptRelatedness.ConceptSimilarity.PathMeasures;
 
-
 import SemanticResource.SemanticResourceHandler;
 import ConceptRelatedness.Concept.Concept;
 
@@ -22,9 +21,9 @@ public class JiangCornathMeasure extends PathAlgorithm<JiangCornathWeightFunctio
     //  alpha = 0.5;
     //  beta = 0.3;
 
-    public JiangCornathMeasure(Concept concept1, Concept concept2, double alpha, double beta, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
-        this.weighter=new JiangCornathWeightFunction(alpha, beta, resource);
+    public JiangCornathMeasure(Concept concept1, Concept concept2, double alpha, double beta) {
+        super(concept1, concept2);
+        this.weighter = new JiangCornathWeightFunction(alpha, beta);
         // alpha and beta are the parameters of the formula 
         //of the weight of the edge between the a parent and a child 
         this.alpha = alpha;
@@ -34,17 +33,31 @@ public class JiangCornathMeasure extends PathAlgorithm<JiangCornathWeightFunctio
         this.formula = "sim(c1,c2)=1/len(c1,c2)";
     }
 
+    public JiangCornathMeasure(double alpha, double beta) {
+        super();
+        this.weighter = new JiangCornathWeightFunction(alpha, beta);
+        // alpha and beta are the parameters of the formula 
+        //of the weight of the edge between the a parent and a child 
+        this.alpha = alpha;
+        this.beta = beta;
+        maximum = Double.MAX_VALUE;
+        minimum = 0;
+        this.formula = "sim(c1,c2)=1/len(c1,c2)";
+
+    }
+
     @Override
     protected double calculateRelatedness() {
-        
 
         double result = (double) 1 / pathLength;
         return result;
     }
-    public double getAlpha(){
+
+    public double getAlpha() {
         return this.alpha;
     }
-    public double getBeta(){
+
+    public double getBeta() {
         return this.beta;
     }
 

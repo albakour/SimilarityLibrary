@@ -19,11 +19,17 @@ public abstract class WordSenseDisambiguationAlgorithm {
     SemanticResourceHandler semanticResource;
     int windowSize;
 
-    public WordSenseDisambiguationAlgorithm(Word[] sentenceWords, Word target, SemanticResourceHandler resource) {
+    public WordSenseDisambiguationAlgorithm(Word[] sentenceWords, Word target) {
         this.sentenceWords = sentenceWords;
         this.targetWord = target;
-        this.semanticResource = resource;
-        windowSize=10;
+        //this.semanticResource = resource;
+        this.semanticResource = SemanticResource.SemanticResourceHandlerFactory.produceObject();
+        windowSize = 10;
+    }
+
+    public WordSenseDisambiguationAlgorithm() {
+        this.semanticResource = SemanticResource.SemanticResourceHandlerFactory.produceObject();
+        windowSize = 10;
     }
 
     public abstract void execute();
@@ -39,15 +45,17 @@ public abstract class WordSenseDisambiguationAlgorithm {
         this.windowSize = size;
         //targetWord.isDisambiguated=false;
     }
-    public void setSentenceWords(Word[] words){
-        this.sentenceWords=words;
-        //targetWord.isDisambiguated=false;
+
+    public void setSentenceWords(Word[] words) {
+        this.sentenceWords = words;
     }
-    public void setTargetWord(Word target){
-        this.targetWord=target;
-       targetWord.isDisambiguated=false;
+
+    public void setTargetWord(Word target) {
+        this.targetWord = target;
+        targetWord.isDisambiguated = false;
     }
-    public SemanticResourceHandler getSemanticResource(){
+
+    public SemanticResourceHandler getSemanticResource() {
         return this.semanticResource;
     }
 

@@ -14,20 +14,38 @@ import SemanticResource.SemanticResourceHandler;
 public class InformationContentCalculatorFactory {
 
     private static SemanticResourceHandler semanticResource;
+    private static String type;
+    private static InformationContentCalculator unitObject;
+    private static InformationContentCalculator secoObject;
+    private static InformationContentCalculator sanchezObject;
 
     public static void setSemanticResource(SemanticResourceHandler resource) {
         semanticResource = resource;
+        unitObject = new UnitInformationContentCalculator(semanticResource);
+        secoObject = new SecoEtAlInformationContentFunction(semanticResource);
+        sanchezObject = new SanchezIsernBatetInformationContentFuntion(semanticResource);
     }
 
-//    public InformationContentCalculatorFactory(SemanticResourceHandler resource) {
-//        this.semanticResource = resource;
-//    }
+    /**
+     *
+     * @return the current information content calculator object 
+     * used in the application 
+     */
     public static InformationContentCalculator produceObject() {
-        InformationContentCalculator object;
-        //object=new SecoEtAlInformationContentFunction();
-        //object = new SanchezIsernBatetInformationContentFuntion(semanticResource);
-        object=new UnitInformationContentCalculator(semanticResource);
-        return object;
+        if (type.equals("unit")) {
+            return unitObject;
+        }
+        if (type.equals("seco")) {
+            return secoObject;
+        }
+        if (type.equals("sanchez")) {
+            return sanchezObject;
+        }
+        return unitObject;
+    }
+
+    public static void setType(String t) {
+        type = t;
     }
 
 }

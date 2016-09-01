@@ -32,10 +32,9 @@ public class SimilarityForm extends javax.swing.JFrame {
     int SimilarityWindowSize = 10;
     public static String dictionaryPath = "wordnet\\WordNet-3.0\\dict";
     public static String englishTaggerPath = "stanfordTagger\\models\\wsj-0-18-left3words-distsim.tagger";
-    String defaultMeasure = "extended gloss";
     SemanticResourceHandler semanticResource;
     StanfordPostHandler posTagger;
-    WordSenseDisambiguationAlgorithm similarityWordDisambiguator;
+    String similarityWordDisambiguator;
     SentenceSenseDisambiguator similaritySentenceDisambiguator;
     ConceptsRelatednessAlgorithm conceptMeasure;
     OptimalGraphMatchingAlgorithm omAlgo;
@@ -43,17 +42,21 @@ public class SimilarityForm extends javax.swing.JFrame {
     String similarityResult;
     String sentenceToDisiambiguate;
     SentenceSenseDisambiguator sentenceDisambiguator;
-    WordSenseDisambiguationAlgorithm wordSenseDisambiguator;
+    MaximizeRelatednessWSDAlgorithm wordSenseDisambiguator;
     int disambiguationWindowSize = 10;
     String disambiguationResult;
     WordOrderAlgorithm wordOrderAlgo;
     double structureWeight = 0.15;
+    String defaultMeasure = "zero";
+    String informationContentFunction = "unit";
 
-    int sentenceSimilarityType;
-    int sentenceSimilarityWordDisambiguatorType;
-    int similarityconceptRelatednessType;
+    ConceptsRelatednessAlgorithm disambiguationConceptMeasure;
+
+    String sentenceSimilarityWordDisambiguatorType = "lesk";
+    String similarityconceptRelatednessType = "path";
+    String disambiguationConceptMeasureType = "extended gloss";
     boolean withStructure = false;
-    boolean isPath = true;
+    // boolean isPath = true;
 
     public SimilarityForm() {
         initComponents();
@@ -65,10 +68,10 @@ public class SimilarityForm extends javax.swing.JFrame {
 
     private void init() {
         //System.out.println("collecting WordNet statistics ... ");
-        semanticResource = SemanticResourceHandlerFactory.produceObject("wordnet", "", dictionaryPath);
+        semanticResource = SemanticResourceHandlerFactory.setConfiguration("wordnet", "", dictionaryPath);
         // WordNetHandler semanticResource2 = (WordNetHandler) SemanticResourceHandlerFactory.produceObject("wordnet", dictionaryPath);
         InformationContentCalculatorFactory.setSemanticResource(semanticResource);
-        DefaultConceptRelatednessMeasureFactory.produceObject(defaultMeasure, semanticResource);
+        InformationContentCalculatorFactory.setType(informationContentFunction);
         posTagger = new StanfordPostHandler();
         posTagger.connect(englishTaggerPath);
         firstSentence = "pure hearts can see the beauty of the nature";
@@ -81,7 +84,8 @@ public class SimilarityForm extends javax.swing.JFrame {
     private void initSimilarity() {
         setSimilarityDisambiguator();
         setConceptMeasure();
-        setSimilarityAlgorithm();
+        DefaultConceptRelatednessMeasureFactory.setType(defaultMeasure);
+        //setSimilarityAlgorithm();
 
 //        similarityWordDisambiguator = new ExtendedLeskAlgorithm(null, null, semanticResource);
 //        similarityWordDisambiguator.setWindowSize(SimilarityWindowSize);
@@ -91,80 +95,96 @@ public class SimilarityForm extends javax.swing.JFrame {
     }
 
     private void setSimilarityDisambiguator() {
-        if (sentenceSimilarityWordDisambiguatorType == 0) {
-            similarityWordDisambiguator = new ExtendedLeskAlgorithm(null, null, semanticResource);
-        } else {
-            similarityWordDisambiguator = new OrginalLeskAlgorithm(null, null, semanticResource);
-        }
-        similarityWordDisambiguator.setWindowSize(SimilarityWindowSize);
-        similaritySentenceDisambiguator = new SentenceSenseDisambiguator("", similarityWordDisambiguator, semanticResource, posTagger);
+        WordSenseDisambiguationAlgorithm wordDisambiguator = WordSenseDisambiguation.WSDAlgorithmFactory.produceObject(sentenceSimilarityWordDisambiguatorType);
+        wordDisambiguator.setWindowSize(SimilarityWindowSize);
+        similaritySentenceDisambiguator = new SentenceSenseDisambiguator("", wordDisambiguator, semanticResource, posTagger);
+        similaritySentenceDisambiguator.setWidowSize(SimilarityWindowSize);
     }
 
-    private void setSimilarityAlgorithm() {
-        if (sentenceSimilarityType == 0) {
-            omAlgo = new BipertiteGraphOptimalMatchingAlgorithm(null);
-            senSimAlgo = new OptimalGraphMatchingBasedSimilarityAlgorithm(firstSentence, secondSentence, omAlgo, similaritySentenceDisambiguator, conceptMeasure);
-        } else {
-            senSimAlgo = new LiVectorBasedSentenceSimilarityAlgorithm(firstSentence, secondSentence, similaritySentenceDisambiguator, conceptMeasure);
-        }
-        wordOrderAlgo = new WordOrderAlgorithm(firstSentence, secondSentence, similaritySentenceDisambiguator, conceptMeasure);
-    }
-
+//    private void setSimilarityAlgorithm() {
+//        if (sentenceSimilarityType == 0) {
+//            omAlgo = new BipertiteGraphOptimalMatchingAlgorithm(null);
+//            senSimAlgo = new MouhibiMatchingMeasure(firstSentence, secondSentence, null, omAlgo, similaritySentenceDisambiguator, conceptMeasure);
+//        } else if (sentenceSimilarityType == 1) {
+//            senSimAlgo = new LiVectorMeasure(firstSentence, secondSentence, similaritySentenceDisambiguator, conceptMeasure);
+//        } else {
+//            // HybridWeighter weighter=new HybridWeighter(null);
+//            senSimAlgo = new HybridMatchingMeasure(firstSentence, secondSentence, null, omAlgo, sentenceDisambiguator, conceptMeasure);
+//        }
+//        wordOrderAlgo = new WordOrderAlgorithm(firstSentence, secondSentence, similaritySentenceDisambiguator, conceptMeasure);
+//    }
     private void setConceptMeasure() {
-        if (isPath) {
-            if (similarityconceptRelatednessType == 0) {
-                conceptMeasure = new PathMeasure(null, null, semanticResource);
-                return;
-            }
-            if (similarityconceptRelatednessType == 1) {
-                double alpha, beta;
-                alpha = 0.2;
-                beta = 0.6;
-                conceptMeasure = new LiMeasure(alpha, beta, null, null, semanticResource);
-                return;
-            }
-            if (similarityconceptRelatednessType == 2) {
-                conceptMeasure = new WuPalmerMeasure(null, null, semanticResource);
-                return;
-            }
-            if (similarityconceptRelatednessType == 3) {
-                conceptMeasure = new LeakcockChodorowMeasure(null, null, semanticResource);
-                return;
-            }
-            if (similarityconceptRelatednessType == 4) {
-                double alpha, beta;
-                alpha = 0.5;
-                beta = 0.3;
-                conceptMeasure = new JiangCornathMeasure(null, null, alpha, beta, semanticResource);
-            }
-
-        } else {
-            if (similarityconceptRelatednessType == 0) {
-                conceptMeasure = new ReniskMeasure(null, null, semanticResource);
-                return;
-            }
-            if (similarityconceptRelatednessType == 1) {
+        conceptMeasure = ConceptRelatednessMeasureFactory.produceObject(similarityconceptRelatednessType);
+//        if (isPath) {
+//            if (similarityconceptRelatednessType == 0) {
+//                conceptMeasure = new PathMeasure();
+//                return;
+//            }
+//            if (similarityconceptRelatednessType == 1) {
 //                double alpha, beta;
 //                alpha = 0.2;
 //                beta = 0.6;
-                conceptMeasure = new LinMeasure(null, null, semanticResource);
-                return;
-            }
-            if (similarityconceptRelatednessType == 2) {
-                conceptMeasure = new JiangMeasure(null, null, semanticResource);
-            }
-
-        }
+//                conceptMeasure = new LiMeasure(alpha, beta);
+//                return;
+//            }
+//            if (similarityconceptRelatednessType == 2) {
+//                conceptMeasure = new WuPalmerMeasure();
+//                return;
+//            }
+//            if (similarityconceptRelatednessType == 3) {
+//                conceptMeasure = new LeakcockChodorowMeasure();
+//                return;
+//            }
+//            if (similarityconceptRelatednessType == 4) {
+//                double alpha, beta;
+//                alpha = 0.5;
+//                beta = 0.3;
+//                conceptMeasure = new JiangCornathMeasure(null, null, alpha, beta);
+//            }
+//
+//        } else {
+//            if (similarityconceptRelatednessType == 0) {
+//                conceptMeasure = new ResnikkMeasure();
+//                return;
+//            }
+//            if (similarityconceptRelatednessType == 1) {
+////                double alpha, beta;
+////                alpha = 0.2;
+////                beta = 0.6;
+//                conceptMeasure = new LinMeasure();
+//                return;
+//            }
+//            if (similarityconceptRelatednessType == 2) {
+//                conceptMeasure = new JiangMeasure();
+//            }
+//
+//        }
 
     }
 
     private void initDisambiguation() {
-        wordSenseDisambiguator = new ExtendedLeskAlgorithm(null, null, semanticResource);
-        wordSenseDisambiguator.setWindowSize(disambiguationWindowSize);
-        sentenceDisambiguator = new SentenceSenseDisambiguator("", wordSenseDisambiguator, semanticResource, posTagger);
+//        setDisambiguationConceptMeasure();
+//        wordSenseDisambiguator = new MaximizeRelatednessWSDAlgorithm();
+//        wordSenseDisambiguator = new ExtendedLeskAlgorithm();
+//        wordSenseDisambiguator.setWindowSize(disambiguationWindowSize);
+        //sentenceDisambiguator = new SentenceSenseDisambiguator("", wordSenseDisambiguator, semanticResource, posTagger);
+        setSentenceDisambiguator();
         sentenceToDisiambiguate = "pure hearts can see the beauty of the nature";
         sentencetoDisambiguateTxtAr.setText(sentenceToDisiambiguate);
 
+    }
+
+    private void setDisambiguationConceptMeasure() {
+        disambiguationConceptMeasure = ConceptRelatednessMeasureFactory.produceObject(disambiguationConceptMeasureType);
+        wordSenseDisambiguator.setRelatednessMeasure(disambiguationConceptMeasure);
+    }
+
+    private void setSentenceDisambiguator() {
+        wordSenseDisambiguator = new MaximizeRelatednessWSDAlgorithm();
+        setDisambiguationConceptMeasure();
+        wordSenseDisambiguator.setRelatednessMeasure(disambiguationConceptMeasure);
+        wordSenseDisambiguator.setWindowSize(disambiguationWindowSize);
+        sentenceDisambiguator = new SentenceSenseDisambiguator("", wordSenseDisambiguator, semanticResource, posTagger);
     }
 
     /**
@@ -188,10 +208,16 @@ public class SimilarityForm extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         secondSentneceTxtAr = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        similarityResultTxtAr = new javax.swing.JTextArea();
+        mouhibiTxtAr = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         calculateSimilarityBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        newMethodTxtAr = new javax.swing.JTextArea();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        vectorMeasureTxtAr = new javax.swing.JTextArea();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         sentencetoDisambiguateTxtAr = new javax.swing.JTextArea();
@@ -201,25 +227,27 @@ public class SimilarityForm extends javax.swing.JFrame {
         disambiguateResultTxtAr = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        jPanel4 = new javax.swing.JPanel();
-        informationContentComBx1 = new javax.swing.JComboBox();
-        pathBasedComBx1 = new javax.swing.JComboBox();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        sentenceSimilarityAlgorithmComBx = new javax.swing.JComboBox();
-        jLabel6 = new javax.swing.JLabel();
         withStructureRadioBtn = new javax.swing.JRadioButton();
         similarityDisambiguationAlgorithmComBx = new javax.swing.JComboBox();
         jlabel7 = new javax.swing.JLabel();
         pathBasedComBx = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        pathRadioBtn = new javax.swing.JRadioButton();
         informationContentComBx = new javax.swing.JComboBox();
         jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        nonNounsSimilarityMeasureComBx = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        informationContentFunctionComBx = new javax.swing.JComboBox();
+        jPanel4 = new javax.swing.JPanel();
+        informationContentComBx1 = new javax.swing.JComboBox();
+        pathBasedComBx1 = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        glossBasedMeasureComBx = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -233,9 +261,9 @@ public class SimilarityForm extends javax.swing.JFrame {
         secondSentneceTxtAr.setRows(5);
         jScrollPane2.setViewportView(secondSentneceTxtAr);
 
-        similarityResultTxtAr.setColumns(20);
-        similarityResultTxtAr.setRows(5);
-        jScrollPane3.setViewportView(similarityResultTxtAr);
+        mouhibiTxtAr.setColumns(20);
+        mouhibiTxtAr.setRows(5);
+        jScrollPane3.setViewportView(mouhibiTxtAr);
 
         jLabel2.setText("Second Sentence");
 
@@ -246,36 +274,54 @@ public class SimilarityForm extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Result");
+        jLabel3.setText("optimal matching result");
+
+        newMethodTxtAr.setColumns(20);
+        newMethodTxtAr.setRows(5);
+        jScrollPane6.setViewportView(newMethodTxtAr);
+
+        vectorMeasureTxtAr.setColumns(20);
+        vectorMeasureTxtAr.setRows(5);
+        jScrollPane7.setViewportView(vectorMeasureTxtAr);
+
+        jLabel14.setText("new method result");
+
+        jLabel15.setText("vector result");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGap(348, 348, 348)
+                                .addComponent(calculateSimilarityBtn))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3)
+                            .addComponent(jLabel2)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel2)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel14)
+                                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel15)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel1))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel3)
-                                .addGap(131, 131, 131)
-                                .addComponent(calculateSimilarityBtn)))
-                        .addGap(0, 267, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,16 +330,23 @@ public class SimilarityForm extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(calculateSimilarityBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel2)
+                .addGap(9, 9, 9)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16)
+                .addComponent(calculateSimilarityBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel14)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
@@ -322,27 +375,23 @@ public class SimilarityForm extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane4)))
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel4))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(jLabel4))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(jLabel5)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel5)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(176, 176, 176)
+                .addGap(312, 312, 312)
                 .addComponent(disAmbiguateBtn)
-                .addContainerGap(262, Short.MAX_VALUE))
+                .addGap(0, 455, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,72 +400,16 @@ public class SimilarityForm extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(37, 37, 37)
                 .addComponent(disAmbiguateBtn)
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Sentence Sense Disambiguation", jPanel2);
-
-        informationContentComBx1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Resnik", "Lin", "Jiang" }));
-
-        pathBasedComBx1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Path", "Li", "Wu", "Leakcock", "Jiang Conrath" }));
-
-        jRadioButton3.setText("path based concept relatedness algorithm ?");
-
-        jLabel9.setText("path based");
-
-        jLabel10.setText("information content ");
-
-        jLabel11.setText("Concept Relatedness Algorithm");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(informationContentComBx1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel9)
-                    .addComponent(pathBasedComBx1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
-                .addContainerGap(320, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel11)
-                .addGap(42, 42, 42)
-                .addComponent(jRadioButton3)
-                .addGap(40, 40, 40)
-                .addComponent(jLabel9)
-                .addGap(18, 18, 18)
-                .addComponent(pathBasedComBx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(140, 140, 140)
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(informationContentComBx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
-        );
-
-        jTabbedPane2.addTab("Sentense Sense Disambiguation ", jPanel4);
-
-        sentenceSimilarityAlgorithmComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Optimal Graph Matching Measure", "Li Vector Based Measure" }));
-        sentenceSimilarityAlgorithmComBx.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sentenceSimilarityAlgorithmComBxActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setText("Sentnece Similarity Algorithm");
 
         withStructureRadioBtn.setText("with structure similarity?");
         withStructureRadioBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -425,7 +418,7 @@ public class SimilarityForm extends javax.swing.JFrame {
             }
         });
 
-        similarityDisambiguationAlgorithmComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extended Lesk", "Original Lesk" }));
+        similarityDisambiguationAlgorithmComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "lesk-e", "lesk" }));
         similarityDisambiguationAlgorithmComBx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 similarityDisambiguationAlgorithmComBxActionPerformed(evt);
@@ -434,7 +427,7 @@ public class SimilarityForm extends javax.swing.JFrame {
 
         jlabel7.setText("Disambiguation Algorithm");
 
-        pathBasedComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Path", "Li", "Wu", "Leakcock", "Jiang Conrath" }));
+        pathBasedComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "path", "li", "wu", "leakcok", "jiang conrath" }));
         pathBasedComBx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pathBasedComBxActionPerformed(evt);
@@ -445,14 +438,7 @@ public class SimilarityForm extends javax.swing.JFrame {
 
         jLabel8.setText("InformationContent Based");
 
-        pathRadioBtn.setText("path based concept relatedness algorithm?");
-        pathRadioBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pathRadioBtnActionPerformed(evt);
-            }
-        });
-
-        informationContentComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Resnik", "Lin", "Jiang" }));
+        informationContentComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "resnik", "lin", "jiang" }));
         informationContentComBx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 informationContentComBxActionPerformed(evt);
@@ -461,6 +447,24 @@ public class SimilarityForm extends javax.swing.JFrame {
 
         jLabel12.setText("Concept Relatedness Algorithm for Sentece Similarity");
 
+        jLabel13.setText("non nouns Similarity Measure");
+
+        nonNounsSimilarityMeasureComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "zero", "traditional gloss", "extended gloss" }));
+        nonNounsSimilarityMeasureComBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nonNounsSimilarityMeasureComBxActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("information content function");
+
+        informationContentFunctionComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "unit", "seco", "sanchez" }));
+        informationContentFunctionComBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                informationContentFunctionComBxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -468,52 +472,131 @@ public class SimilarityForm extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(jlabel7)
-                    .addComponent(similarityDisambiguationAlgorithmComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(pathRadioBtn)
-                    .addComponent(sentenceSimilarityAlgorithmComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pathBasedComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addGap(83, 83, 83)
+                            .addComponent(jLabel13)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(pathBasedComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(74, 74, 74)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(informationContentComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8)))
+                            .addComponent(jlabel7)
+                            .addComponent(withStructureRadioBtn))
+                        .addGap(0, 577, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(informationContentComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(withStructureRadioBtn))
-                .addContainerGap(239, Short.MAX_VALUE))
+                            .addComponent(jLabel12)
+                            .addComponent(similarityDisambiguationAlgorithmComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(nonNounsSimilarityMeasureComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(237, 237, 237)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(informationContentFunctionComBx, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jLabel13)
                 .addGap(18, 18, 18)
-                .addComponent(sentenceSimilarityAlgorithmComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(nonNounsSimilarityMeasureComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(26, 26, 26)
+                .addComponent(informationContentFunctionComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
                 .addComponent(withStructureRadioBtn)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jlabel7)
                 .addGap(18, 18, 18)
                 .addComponent(similarityDisambiguationAlgorithmComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
+                .addGap(84, 84, 84)
                 .addComponent(jLabel12)
-                .addGap(18, 18, 18)
-                .addComponent(pathRadioBtn)
-                .addGap(18, 18, 18)
+                .addGap(34, 34, 34)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(pathBasedComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(informationContentComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                    .addComponent(informationContentComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pathBasedComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Senetence Similarity", jPanel3);
+
+        informationContentComBx1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "resnik", "lin", "jiang" }));
+        informationContentComBx1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                informationContentComBx1ActionPerformed(evt);
+            }
+        });
+
+        pathBasedComBx1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "path", "li", "wu", "leakcok", "jiang conrath" }));
+        pathBasedComBx1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pathBasedComBx1ActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("path based");
+
+        jLabel10.setText("information content ");
+
+        jLabel11.setText("Concept Relatedness Algorithm");
+
+        jLabel16.setText("gloss based");
+
+        glossBasedMeasureComBx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "traditional gloss", "extended gloss" }));
+        glossBasedMeasureComBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                glossBasedMeasureComBxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel10)
+                    .addComponent(informationContentComBx1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel9)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(glossBasedMeasureComBx, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pathBasedComBx1, javax.swing.GroupLayout.Alignment.LEADING, 0, 119, Short.MAX_VALUE)))
+                .addContainerGap(734, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel11)
+                .addGap(28, 28, 28)
+                .addComponent(jLabel16)
+                .addGap(26, 26, 26)
+                .addComponent(glossBasedMeasureComBx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addGap(18, 18, 18)
+                .addComponent(pathBasedComBx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(114, 114, 114)
+                .addComponent(jLabel10)
+                .addGap(30, 30, 30)
+                .addComponent(informationContentComBx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(120, 120, 120))
+        );
+
+        jTabbedPane2.addTab("Sentense Sense Disambiguation ", jPanel4);
 
         jTabbedPane1.addTab("Configuration", jTabbedPane2);
 
@@ -521,14 +604,11 @@ public class SimilarityForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jTabbedPane1)
         );
 
         pack();
@@ -537,6 +617,7 @@ public class SimilarityForm extends javax.swing.JFrame {
     private void disAmbiguateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disAmbiguateBtnActionPerformed
         // TODO add your handling code here:
         sentenceToDisiambiguate = sentencetoDisambiguateTxtAr.getText();
+        setSentenceDisambiguator();
         sentenceDisambiguator.setSentence(sentenceToDisiambiguate);
         sentenceDisambiguator.execute(disambiguationWindowSize);
         disambiguationResult = "";
@@ -550,45 +631,69 @@ public class SimilarityForm extends javax.swing.JFrame {
         firstSentence = firstSentenceTxtAr.getText();
         secondSentence = secondSentneceTxtAr.getText();
         initSimilarity();
-        senSimAlgo.execute();
-        double sim;
+        omAlgo = new BipertiteGraphOptimalMatchingAlgorithm(null);
+        HybridMatchingMeasure newMeasure = new HybridMatchingMeasure(firstSentence, secondSentence, null, omAlgo, sentenceDisambiguator, conceptMeasure);
+        MouhibiMatchingMeasure mouhibiMeasure = new MouhibiMatchingMeasure(firstSentence, secondSentence, null, omAlgo, sentenceDisambiguator, conceptMeasure);
+        LiVectorMeasure vectorMeasure = new LiVectorMeasure(firstSentence, secondSentence, sentenceDisambiguator, conceptMeasure);
+
+        mouhibiMeasure.execute();
+        newMeasure.execute();
+        vectorMeasure.execute();
+        // senSimAlgo.execute();
+        double sim1, sim2, sim3;
         if (withStructure) {
             wordOrderAlgo.execute();
-            sim = (1 - structureWeight) * senSimAlgo.getSimilarity() + structureWeight * wordOrderAlgo.getSimilarity();
+            sim2 = (1 - structureWeight) * newMeasure.getSimilarity() + structureWeight * wordOrderAlgo.getSimilarity();
+            sim1 = (1 - structureWeight) * mouhibiMeasure.getSimilarity() + structureWeight * wordOrderAlgo.getSimilarity();
+            sim3 = (1 - structureWeight) * vectorMeasure.getSimilarity() + structureWeight * wordOrderAlgo.getSimilarity();
         } else {
-            sim = senSimAlgo.getSimilarity();
+            sim1 = mouhibiMeasure.getSimilarity();
+            sim2 = newMeasure.getSimilarity();
+            sim3 = vectorMeasure.getSimilarity();
         }
+        String newMethodResult = "";
+        String mouhibiMeasureResult = "";
+        String vectorMeasureResult = "";
+        newMethodResult += "similarity = " + sim2 + "\n____________\n";
+        mouhibiMeasureResult += "similarity = " + sim1 + "\n____________\n";
+        vectorMeasureResult += "similarity = " + sim3 + "\n____________\n";
+        newMethodResult += "matchings \n____________\n";
+        mouhibiMeasureResult += "matchings \n____________\n";
+        newMethodResult += newMeasure.getMatching();
+        mouhibiMeasureResult += mouhibiMeasure.getMatching();
         similarityResult = "";
-        similarityResult += "similarity = " + sim + "\n____________\n";
-        if (sentenceSimilarityType == 0) {
-            similarityResult += "matchings \n____________\n";
-            similarityResult += ((OptimalGraphMatchingBasedSimilarityAlgorithm) senSimAlgo).getMatching();
-        }
-        similarityResultTxtAr.setText(similarityResult);
+        mouhibiTxtAr.setText(mouhibiMeasureResult);
+        newMethodTxtAr.setText(newMethodResult);
+        vectorMeasureTxtAr.setText(vectorMeasureResult);
     }//GEN-LAST:event_calculateSimilarityBtnActionPerformed
 
-    private void sentenceSimilarityAlgorithmComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sentenceSimilarityAlgorithmComBxActionPerformed
+    private void nonNounsSimilarityMeasureComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nonNounsSimilarityMeasureComBxActionPerformed
         // TODO add your handling code here:
-        int index = sentenceSimilarityAlgorithmComBx.getSelectedIndex();
-        // String type=(String)sentenceSimilarityAlgorithmComBx.getItemAt(index);
-        sentenceSimilarityType = index;
-    }//GEN-LAST:event_sentenceSimilarityAlgorithmComBxActionPerformed
+        int index = nonNounsSimilarityMeasureComBx.getSelectedIndex();
+        defaultMeasure = (String) nonNounsSimilarityMeasureComBx.getItemAt(index);
+        DefaultConceptRelatednessMeasureFactory.setType(defaultMeasure);
+    }//GEN-LAST:event_nonNounsSimilarityMeasureComBxActionPerformed
+
+    private void informationContentComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_informationContentComBxActionPerformed
+        // TODO add your handling code here:
+        int index = informationContentComBx.getSelectedIndex();
+        similarityconceptRelatednessType = (String) informationContentComBx.getItemAt(index);
+        setConceptMeasure();
+    }//GEN-LAST:event_informationContentComBxActionPerformed
+
+    private void pathBasedComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathBasedComBxActionPerformed
+        // TODO add your handling code here:
+        int index = pathBasedComBx.getSelectedIndex();
+        similarityconceptRelatednessType = (String) pathBasedComBx.getItemAt(index);
+        setConceptMeasure();
+    }//GEN-LAST:event_pathBasedComBxActionPerformed
 
     private void similarityDisambiguationAlgorithmComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_similarityDisambiguationAlgorithmComBxActionPerformed
         // TODO add your handling code here:
         int index = similarityDisambiguationAlgorithmComBx.getSelectedIndex();
-        sentenceSimilarityWordDisambiguatorType = index;
-
+        sentenceSimilarityWordDisambiguatorType = (String) similarityDisambiguationAlgorithmComBx.getItemAt(index);
+        setSimilarityDisambiguator();
     }//GEN-LAST:event_similarityDisambiguationAlgorithmComBxActionPerformed
-
-    private void pathRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathRadioBtnActionPerformed
-        // TODO add your handling code here:
-        if (pathRadioBtn.isSelected()) {
-            isPath = true;
-        } else {
-            isPath = false;
-        }
-    }//GEN-LAST:event_pathRadioBtnActionPerformed
 
     private void withStructureRadioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withStructureRadioBtnActionPerformed
         // TODO add your handling code here:
@@ -599,17 +704,31 @@ public class SimilarityForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_withStructureRadioBtnActionPerformed
 
-    private void pathBasedComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathBasedComBxActionPerformed
+    private void informationContentFunctionComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_informationContentFunctionComBxActionPerformed
         // TODO add your handling code here:
-        int index = pathBasedComBx.getSelectedIndex();
-        similarityconceptRelatednessType = index;
-    }//GEN-LAST:event_pathBasedComBxActionPerformed
+        int index = informationContentFunctionComBx.getSelectedIndex();
+        informationContentFunction = (String) informationContentFunctionComBx.getItemAt(index);
+        InformationContentCalculatorFactory.setType(informationContentFunction);
+    }//GEN-LAST:event_informationContentFunctionComBxActionPerformed
 
-    private void informationContentComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_informationContentComBxActionPerformed
+    private void pathBasedComBx1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathBasedComBx1ActionPerformed
         // TODO add your handling code here:
-        int index = informationContentComBx.getSelectedIndex();
-        similarityconceptRelatednessType = index;
-    }//GEN-LAST:event_informationContentComBxActionPerformed
+        int index = pathBasedComBx1.getSelectedIndex();
+        disambiguationConceptMeasureType = (String) pathBasedComBx1.getItemAt(index);
+
+    }//GEN-LAST:event_pathBasedComBx1ActionPerformed
+
+    private void informationContentComBx1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_informationContentComBx1ActionPerformed
+        // TODO add your handling code here:
+        int index = informationContentComBx1.getSelectedIndex();
+        disambiguationConceptMeasureType = (String) informationContentComBx1.getItemAt(index);
+    }//GEN-LAST:event_informationContentComBx1ActionPerformed
+
+    private void glossBasedMeasureComBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_glossBasedMeasureComBxActionPerformed
+        // TODO add your handling code here:
+        int index = glossBasedMeasureComBx.getSelectedIndex();
+        disambiguationConceptMeasureType = (String) glossBasedMeasureComBx.getItemAt(index);
+    }//GEN-LAST:event_glossBasedMeasureComBxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -655,12 +774,18 @@ public class SimilarityForm extends javax.swing.JFrame {
     private javax.swing.JButton disAmbiguateBtn;
     private javax.swing.JTextArea disambiguateResultTxtAr;
     private javax.swing.JTextArea firstSentenceTxtAr;
+    private javax.swing.JComboBox glossBasedMeasureComBx;
     private javax.swing.JComboBox informationContentComBx;
     private javax.swing.JComboBox informationContentComBx1;
+    private javax.swing.JComboBox informationContentFunctionComBx;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -673,23 +798,25 @@ public class SimilarityForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel jlabel7;
+    private javax.swing.JTextArea mouhibiTxtAr;
+    private javax.swing.JTextArea newMethodTxtAr;
+    private javax.swing.JComboBox nonNounsSimilarityMeasureComBx;
     private javax.swing.JComboBox pathBasedComBx;
     private javax.swing.JComboBox pathBasedComBx1;
-    private javax.swing.JRadioButton pathRadioBtn;
     private javax.swing.JTextArea secondSentneceTxtAr;
-    private javax.swing.JComboBox sentenceSimilarityAlgorithmComBx;
     private javax.swing.JTextArea sentencetoDisambiguateTxtAr;
     private javax.swing.JComboBox similarityDisambiguationAlgorithmComBx;
-    private javax.swing.JTextArea similarityResultTxtAr;
+    private javax.swing.JTextArea vectorMeasureTxtAr;
     private javax.swing.JRadioButton withStructureRadioBtn;
     // End of variables declaration//GEN-END:variables
 }

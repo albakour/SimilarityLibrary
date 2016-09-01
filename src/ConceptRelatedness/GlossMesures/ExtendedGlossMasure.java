@@ -13,12 +13,18 @@ import ConceptRelatedness.Concept.Concept;
  *
  * @author sobhy
  */
-public class ExtendedGlossMasure  extends GlossAlgorithm <ExtendedRelatedConceptsGenerator>{
+public class ExtendedGlossMasure extends GlossAlgorithm<ExtendedRelatedConceptsGenerator> {
 
-    public ExtendedGlossMasure(Concept concept1, Concept concept2, SemanticResourceHandler resource) {
-        super(concept1, concept2, resource);
-        ExtendedRelatedConceptsGenerator generator= new ExtendedRelatedConceptsGenerator();
+    public ExtendedGlossMasure(Concept concept1, Concept concept2) {
+        super(concept1, concept2);
+        ExtendedRelatedConceptsGenerator generator = new ExtendedRelatedConceptsGenerator();
         this.setRelatedConceptsGenerator(generator);
     }
-    
+
+    public ExtendedGlossMasure() {
+        super();
+        ExtendedRelatedConceptsGenerator generator = new ExtendedRelatedConceptsGenerator();
+        this.setRelatedConceptsGenerator(generator);
+    }
+
 }
